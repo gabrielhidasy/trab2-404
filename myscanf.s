@@ -132,7 +132,7 @@ _le_int:
 	moveq	r8, #1
 	@and next char
 	add	r2, r2, #1
-_le_int_loop
+_le_int_loop:	
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
@@ -154,7 +154,8 @@ _le_int_loop
 	add 	r6, r6, r0
 	@multiply by 10
 	mov	r7, r6
-	mul	r6, r7,	#10
+	mov	ip, #10
+	mul	r6, r7,	ip
 	b 	_le_int_loop
 _le_int_loop_out:
 	cmp	r8, #0
@@ -169,7 +170,7 @@ _le_hexa:
 	ldr	r5, [r11], #4
 	@acummulator = r6 = 0
 	mov 	r6, #0
-_le_hexa_loop
+_le_hexa_loop:	
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
@@ -201,7 +202,7 @@ _le_lhexa:
 	@acummulator = r1:r0 = 0
 	mov 	r1, #0
 	mov	r0, #0
-_le_lhexa_loop
+_le_lhexa_loop:	
 	@get character from input buffer
 	ldrb	r4, [r2]
         @---------------------------------------
@@ -212,7 +213,7 @@ _le_lhexa_loop
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	cmp	r0, #'\n
 	streq	r1, [r5], #1
-	streq	r0, [r5]'
+	streq	r0, [r5]
 	@--------------------------------------
 	@next char
 	add 	r2, r2, #1
@@ -235,7 +236,7 @@ _le_octa:
 	ldr	r5, [r11], #4
 	@acummulator = r6 = 0
 	mov 	r6, #0
-_le_octa_loop
+_le_octa_loop:	
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
@@ -261,14 +262,13 @@ _le_octa_loop
 	mov	r6, r6, lsl #3
 	b 	_le_octa_loop
 _le_locta:
-	_le_lhexa:
 	stmfd	sp!, {R4-R11, lr}
 	@load the next pointer
 	ldr	r5, [r11], #4
 	@acummulator = r1:r0 = 0
 	mov 	r1, #0
 	mov	r0, #0
-_le_locta_loop
+_le_locta_loop:	
 	@get character from input buffer
 	ldrb	r4, [r2]
         @---------------------------------------
@@ -279,7 +279,7 @@ _le_locta_loop
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	cmp	r0, #'\n
 	streq	r1, [r5], #1
-	streq	r0, [r5]'
+	streq	r0, [r5]
 	@--------------------------------------
 	@next char
 	add 	r2, r2, #1
@@ -302,7 +302,7 @@ _le_uint:
 	ldr	r5, [r11], #4
 	@acummulator = r6 = 0
 	mov 	r6, #0
-_le_uint_loop
+_le_uint_loop:	
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
@@ -324,7 +324,8 @@ _le_uint_loop
 	add 	r6, r6, r0
 	@and do multiply by 10
 	mov 	r7, r6
-	mul	r6, r7, #10
+	mov	ip, #10
+	mul	r6, r7, ip
 	b 	_le_hexa_loop
 _le_luint:
 	ldr 	r0, =notimp
@@ -338,9 +339,6 @@ _le_caracter:
 	@store the character in the parameter
 	strb	r4, [r5]
 	mov 	pc, lr
-	
-	
-_trata_short:	
 _le_string:
 	@get caracter from input buffer
 	ldrb	r4, [r2], #1
@@ -391,6 +389,7 @@ _le_long:
 	bleq	_le_long_long
 	ldmeqfd	sp!, {R4, pc}
 	ldmfd	sp!, {R4, pc}
+_trata_short:	
 
 .data
 error:	

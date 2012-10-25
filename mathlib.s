@@ -4,6 +4,16 @@
 .type magic, %function
 .global longsub
 .type longsub, %function
+.global chartonumber
+.type 	chartonumber, %function
+.global long4lsl
+.type long4lsl, %function
+.global long4lsr
+.type long4lsr, %function
+.global long3lsl
+.type long3lsl, %function
+.global long3lsr
+.type long3lsl, %function
 pow10:
 	@recebe um numero em r0, retorna esse numero
 	@x 10 r1 vezes
@@ -59,7 +69,7 @@ longlsr: @em teste
 	@agora deslocar r1
 	mov	r1, r1, lsr #1
 	ldmfd	sp!, {R4}
-	mov	pc, l
+	mov	pc, lr
 long3lsr:
 	stmfd 	sp!, {lr}
 	bl 	longlsr
