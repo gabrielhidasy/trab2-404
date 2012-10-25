@@ -1,0 +1,32 @@
+	.text
+	.align	4
+	.global _start
+	.global	main
+	.type	main, %function
+@_start:	
+main:
+	ldr	r0, =mystring
+	ldr	r1, =caracter1
+	mov 	r2, #0x5
+	mov 	r2, #0x56
+	mov 	r3, #0xFF
+	mov 	r3, r3, lsl #28
+	bl	myprintf
+__mainend:
+	mov	r7, #1
+	svc	0
+
+	.data
+	.align	4
+mystring:
+	.asciz	"Hello World %llu\n"
+	.asciz	"garbage"
+mystring2:
+	.asciz 	"Hello Garbage\n"
+
+	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
+	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
+	@@tá tratando tudo como unsigned
+caracter1:
+	.skip 1, 0
+	

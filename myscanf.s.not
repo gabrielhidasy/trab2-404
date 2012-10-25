@@ -1,0 +1,2 @@
+.global myscanf
+.type myprintf, %function
