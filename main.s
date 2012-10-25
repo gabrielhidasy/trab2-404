@@ -6,12 +6,12 @@
 @_start:	
 main:
 	ldr	r0, =mystring
-	ldr	r1, =caracter1
-	ldr 	r2, =caracter2
-	ldr 	r3, =caracter4
+	mov	r1, #0x0
+	mov 	r2, #0xD
+	mov 	r3, #0xE
 	stmfd	sp!, {r3}
-	ldr 	r3, =caracter3
-	bl	myscanf
+	@ldr 	r3, =caracter3
+	bl	myprintf
 	ldmfd 	sp!, {r3}
 	ldr	r0, =mystring
 	ldr	r1, =caracter1
@@ -31,7 +31,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"Hello World %c%c%c %c\n"
+	.asciz	"Hello World %lld\n"
 	.asciz	"garbage"
 mystring2:
 	.asciz 	"Hello Garbage\n"
