@@ -59,7 +59,20 @@ longlsr: @em teste
 	@agora deslocar r1
 	mov	r1, r1, lsr #1
 	ldmfd	sp!, {R4}
-	mov	pc, lr
+	mov	pc, l
+long3lsr:
+	stmfd 	sp!, {lr}
+	bl 	longlsr
+	bl 	longlsr
+	bl 	longlsr
+	ldmfd	sp!, {pc}
+long4lsr:
+	stmfd 	sp!, {lr}
+	bl 	longlsr
+	bl 	longlsr
+	bl 	longlsr
+	bl 	longlsr
+	ldmfd	sp!, {pc}
 
 longlsl: @em teste
 	@recebe em r1:r0 um numero long
@@ -78,6 +91,28 @@ longlsl: @em teste
 	mov	r0, r0, lsl #1
 	ldmfd	sp!, {R4}
 	mov	pc, lr
+long3lsl:
+	stmfd 	sp!, {lr}
+	bl 	longlsl
+	bl 	longlsl
+	bl 	longlsl
+	ldmfd	sp!, {pc}
+long4lsl:
+	stmfd 	sp!, {lr}
+	bl 	longlsl
+	bl 	longlsl
+	bl 	longlsl
+	bl 	longlsl
+	ldmfd	sp!, {pc}
+chartonumber:
+	@gets an character in r0 and
+	@returns its hexa, octa or,
+	@decimal,  assumes its a digit
+	@(the octa is contained in dec
+	@and dec in hexa)
+	sub 	r0, r0, #48
+	cmp	r0, #'9'
+	subgt	r0, r0, #39
 .data
 magicconstant:
 	.int 858993460
