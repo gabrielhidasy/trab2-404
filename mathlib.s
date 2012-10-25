@@ -1,19 +1,21 @@
 .global pow10			
-.type pow10, %function
+.type 	pow10, %function
 .global magic
-.type magic, %function
+.type 	magic, %function
 .global longsub
-.type longsub, %function
+.type 	longsub, %function
 .global chartonumber
 .type 	chartonumber, %function
 .global long4lsl
-.type long4lsl, %function
+.type 	long4lsl, %function
 .global long4lsr
-.type long4lsr, %function
+.type 	long4lsr, %function
 .global long3lsl
-.type long3lsl, %function
+.type 	long3lsl, %function
 .global long3lsr
-.type long3lsl, %function
+.type 	long3lsl, %function
+.global mult6410
+.type 	mult6410, %function
 pow10:
 	@recebe um numero em r0, retorna esse numero
 	@x 10 r1 vezes
@@ -31,6 +33,11 @@ _pow10end:
 	mov 	pc, lr
 
 magic:
+	@magically divide an 32 bits number by 10
+	@its made by multipling the number for a
+	@constant ((2^33)/10) then getting only the
+	@most significant part of the number, and
+	@bitshifting it todivide it by 2
 	stmfd 	sp!, {R4-R11, lr}
 	ldr 	r4, =magicconstant
 	ldr 	r4, [r4]
@@ -123,6 +130,22 @@ chartonumber:
 	sub 	r0, r0, #48
 	cmp	r0, #'9'
 	subgt	r0, r0, #39
+mult6410:
+	@multiply an 64 bits number in r1:r0 * 10
+	stmfd 	sp!, {r4-r6, lr}
+	@first multiply the bigger part for 10
+	mov 	r6, #10
+	mul	r1, r1, r6
+	@now an long multiplication in the least
+	@significant part
+	umull	r4, r5, r0, r6
+	@mov the least significant of them (r4)
+	@to the awser less significative
+	mov	r0, r4
+	@and add the most significatives (r1, r5)
+	add	r1, r1, r5
+	@the awser is in R1:R0
+	ldmfd {r4-r6, pc}
 .data
 magicconstant:
 	.int 858993460
