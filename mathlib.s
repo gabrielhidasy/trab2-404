@@ -135,7 +135,7 @@ mult6410:
 	stmfd 	sp!, {r4-r6, lr}
 	@first multiply the bigger part for 10
 	mov 	r6, #10
-	mul	r1, r1, r6
+	mul	r1, r6, r1
 	@now an long multiplication in the least
 	@significant part
 	umull	r4, r5, r0, r6
@@ -145,7 +145,7 @@ mult6410:
 	@and add the most significatives (r1, r5)
 	add	r1, r1, r5
 	@the awser is in R1:R0
-	ldmfd {r4-r6, pc}
+	ldmfd sp!, {r4-r6, pc}
 .data
 magicconstant:
 	.int 858993460

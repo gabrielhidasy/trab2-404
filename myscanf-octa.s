@@ -49,14 +49,14 @@ _le_locta_loop:
 	streq	r1, [r5], #1
 	streq	r0, [r5]
 	ldmeqfd 	sp!, {R4 - R11, pc}
-	cmp	r0, #'\n
+	cmp	r4, #'\n
 	streq	r1, [r5], #1
 	streq	r0, [r5]
 	@--------------------------------------
 	@next char
 	add 	r2, r2, #1
 	@transforms in number
-	bl 	chartonumber
+	sub	r4, r4, #48
 	@if its less than zero or greater then 7
 	@its not valid, error
 	cmp	r4, #0

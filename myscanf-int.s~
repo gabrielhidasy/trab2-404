@@ -6,6 +6,7 @@
 .type	_le_lint, %function
 .global _le_luint
 .type	_le_luint, %function
+.
 _le_int:
 	@just the same as luint but if the first char
 	@is an - you need to do the rsb
@@ -85,43 +86,8 @@ _le_uint_loop:
 	mul	r6, r7, ip
 	b 	_le_uint_loop
 
-_le_luint:
-	@not much different, but the multiplication use a function in
-	@mathlib.s
-	stmfd	sp!, {R4-R11, lr}
-	@load the next pointer
-	ldr	r5, [r11], #4
-	@acummulator = r1:r0 = 0
-	mov 	r1, #0
-	mov 	r0, #0
-_le_luint_loop:	
-	@get character from input buffer
-	ldrb	r4, [r2]
-	@if its an space or \n its the end
-	@------------------------------------
-	@cmp	r4, #' '
-	@streq	r6, [r5]
-	@ldmeqfd 	sp!, {R4 - R11, pc}
-	@cmp	r0, #'\n'
-	@streq	r6, [r5]
-	@ldmeqfd 	sp!, {R4 - R11, pc}
-	@-----------------------------------
-	@transforms in number
-	sub	r4, r4, #48
-	@if its less than zero or greater then 9
-	@its not valid, error
-	cmp	r4, #0
-	blt	_myscanf_real_error
-	cmp	r4, #9
-	bgt	_myscanf_real_error
-	@else add it to accumulator
-	add 	r0, r0, r4
-	@and multiply by 10
-	bl 	mult6410
-	b 	_le_luint_loop
 _le_lint:
+_le_luint:
 	ldr 	r0, =notimp
 	bl 	myprintf
 	b	_myscanf_real_error
-notimp:
-	.asciz "not implemented yet\n"
