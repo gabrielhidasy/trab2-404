@@ -115,112 +115,6 @@ _trata_mascaras_scanf:
 	@mas ao ler o h, a função deve retornar erro
 	@se o valor a ser escrito for maior que a palavra
 
-_le_int:
-	@just the same as luint but if the first char
-	@is an - you need to do the rsb
-	stmfd	sp!, {R4-R11, lr}
-	@load the next pointer
-	ldr	r5, [r11], #4
-	@acummulator = r6 = 0
-	mov 	r6, #0
-	mov 	r8, #0
-	@get the first char
-	ldrb	r0, [r2]
-	cmp	r0, #'-'
-	@if it is an minus, the result will be the negative
-	@set the flag r8 for this
-	moveq	r8, #1
-	@and next char
-	add	r2, r2, #1
-_le_int_loop:	
-	@get character from input buffer
-	ldrb	r0, [r2]
-	@if its an space or \n its the end
-	cmp	r0, #' '
-	b _le_int_loop_out
-	cmp	r0, #'\n'
-	b _le_int_loop_out
-	@next char
-	add	r2, r2, #1
-	@transforms in number
-	bl 	chartonumber
-	@if its less than zero or greater then F
-	@its not valid, error
-	cmp	r0, #0
-	blt	_myscanf_real_error
-	cmp	r0, #15
-	bgt	_myscanf_real_error
-	@else add it to accumulator
-	add 	r6, r6, r0
-	@multiply by 10
-	mov	r7, r6
-	mov	ip, #10
-	mul	r6, r7,	ip
-	b 	_le_int_loop
-_le_int_loop_out:
-	cmp	r8, #0
-	rsbne	r6, r6, #0
-	str	r6, [r5]
-	ldmfd 	sp!, {R4 - R11, pc}
-_le_lint:
-	mov 	pc, lr
-_le_uint:
-	stmfd	sp!, {R4-R11, lr}
-	@load the next pointer
-	ldr	r5, [r11], #4
-	@acummulator = r6 = 0
-	mov 	r6, #0
-_le_uint_loop:	
-	@get character from input buffer
-	ldrb	r0, [r2]
-	@if its an space or \n its the end
-	cmp	r0, #' '
-	streq	r6, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
-	cmp	r0, #'\n'
-	streq	r6, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
-	@transforms in number
-	bl 	chartonumber
-	@if its less than zero or greater then 9
-	@its not valid, error
-	cmp	r0, #0
-	blt	_myscanf_real_error
-	cmp	r0, #9
-	bgt	_myscanf_real_error
-	@else add it to accumulator
-	add 	r6, r6, r0
-	@and do multiply by 10
-	mov 	r7, r6
-	mov	ip, #10
-	mul	r6, r7, ip
-	b 	_le_uint_loop
-_le_luint:
-	ldr 	r0, =notimp
-	bl 	myprintf
-	b	_myscanf_real_error
-_le_caracter:
-	@gets an caracter from the input buffer
-	ldrb	r4, [r2], #1
-	@gets an adress to store the char from the stack
-	ldr	r5, [r11], #4
-	@store the character in the parameter
-	strb	r4, [r5]
-	mov 	pc, lr
-_le_string:
-	@get caracter from input buffer
-	ldrb	r4, [r2], #1
-	@load the adress to store it
-	ldr	r5, [r11], #4
-	@save the caracter to the string buffer
-	strb	r4, [r5], #1
-	@compare the caracter with 0
-	@even an null string would store
-	@the first 0, it is used to identify
-	@the end of the string
-	cmp	r4, #0
-	bne	_le_string
-	mov	pc, lr
 _le_long_long:
 	@ler o proximo caracter para definir
 	@tipo de long long a ser lido
@@ -264,8 +158,6 @@ error:
 	.asciz "Deu pau\n"
 nerror:
 	.asciz "Não deu erro"
-notimp:
-	.asciz "not implemented yet\n"
 bufferin:
 	.skip 2000, 0
 	

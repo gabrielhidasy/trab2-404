@@ -99,12 +99,14 @@ _le_luint_loop:
 	ldrb	r4, [r2]
 	@if its an space or \n its the end
 	@------------------------------------
-	@cmp	r4, #' '
-	@streq	r6, [r5]
-	@ldmeqfd 	sp!, {R4 - R11, pc}
-	@cmp	r0, #'\n'
-	@streq	r6, [r5]
-	@ldmeqfd 	sp!, {R4 - R11, pc}
+	cmp	r4, #' '
+	streq	r0, [r5], #1
+	streq	r1, [r5]
+	ldmeqfd 	sp!, {R4 - R11, pc}
+	cmp	r4, #'\n'
+	streq	r0, [r5], #1
+	streq	r1, [r5]
+	ldmeqfd 	sp!, {R4 - R11, pc}
 	@-----------------------------------
 	@transforms in number
 	sub	r4, r4, #48
@@ -120,8 +122,55 @@ _le_luint_loop:
 	bl 	mult6410
 	b 	_le_luint_loop
 _le_lint:
-	ldr 	r0, =notimp
-	bl 	myprintf
-	b	_myscanf_real_error
-notimp:
-	.asciz "not implemented yet\n"
+	stmfd	sp!, {r4-r11, lr}
+	@first get the first char, if its an - then set an flag (r8)
+	@and go to luint, else just go to uints
+	ldrb	r4, [r2]
+	@load the next pointer
+	ldr	r5, [r11], #4
+	mov 	r8, #0
+	ldrb	r0, [r2]
+	cmp 	r0, #'-'
+	@if the result is an -, set the flag
+	moveq	r8, #1
+	@and next char
+	addeq	r2, r2, #1
+	@now repeat the _le_luint_loop
+_le_lint_loop:	
+	@get character from input buffer
+	ldrb	r4, [r2]
+	@if its an space or \n its the end
+	@------------------------------------
+	cmp	r4, #' '
+	beq	_le_lint_loop_out
+	cmp	r4, #'\n'
+	beq	_le_lint_loop_out
+	@-----------------------------------
+	@transforms in number
+	sub	r4, r4, #48
+	@if its less than zero or greater then 9
+	@its not valid, error
+	cmp	r4, #0
+	blt	_myscanf_real_error
+	cmp	r4, #9
+	bgt	_myscanf_real_error
+	@else add it to accumulator
+	add 	r0, r0, r4
+	@and multiply by 10
+	bl 	mult6410
+	b 	_le_lint_loop
+_le_lint_loop_out:
+	@invert the number, if needed
+	@remembering that to invert an
+	@64 bits you do rsb in both and
+	@then subtract one in the most
+	@significative part
+	cmp 	r8, #0
+	rsbne	r0, r0, #0
+	rsbne	r1, r1, #0
+	addne	r1, r1, #1
+	str	r0, [r5], #1
+	str	r1, [r5]
+	ldmfd sp!, {R4 - R11, pc}
+
+	
