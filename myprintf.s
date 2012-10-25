@@ -168,10 +168,4 @@ _trata_long_longs:
 buffer:
 	.skip 2000, 0
 
-auxbufferints:
-	.skip 2000, 0
-.align 1
-stringmagica:
-	.asciz "09223372036854775808"
-
 	
