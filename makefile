@@ -1,4 +1,4 @@
-SRC = $(wildcard */*.s)
+SRC = $(wildcard */*.s + *.s)
 OBJ = $(SRC:.s=.o)
 
 arm-as := as
