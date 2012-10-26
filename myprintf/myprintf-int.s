@@ -113,17 +113,12 @@ _trata_luint:
 	mov r7, #0
 	@Esse não tem divisão magica,
 	@subtrações sucessivas
-	@como todo long aumenta r2
-	add	r2, r2, #1
-	@e aumenta mais se no caso impar
-	and 	r4, r2, #1
-	cmp 	r2, #0
-	addne 	r2, r2, #1
-	@alem disso, nesse caso r3 é o proximo 
-	addne 	r3, r3, #4
+	and	r4, r2, #8
+	cmp	r4, #0
+	addne	r2, #4
 	@carrega argumento em r5:r4
-	ldr 	r5, [r3, #4]
-	ldr 	r4, [r3]
+	ldr 	r5, [r2, #4]
+	ldr 	r4, [r2]
 	@caso argumento mais significativo = 0, basta imprimir como uint
 	cmp 	r5, #0
 	bleq	_trata_uint
@@ -240,7 +235,7 @@ _trata_int:
 	stmfd 	sp!, {R4-R11,lr}
 	mov 	r4, #1
 	mov	r4, r4, lsl #31
-	ldr 	r5, [r3]
+	ldr 	r5, [r2], #4
 	and 	r4, r4, r5
 	cmp 	r4, #0
 	bleq 	_trata_uint
@@ -252,7 +247,7 @@ _trata_int:
 	@agora negai sua origem
 	rsb	r5, r5, #0
 	@em r5 tem o inteiro negado
-	str 	r5, [r3]
+	str 	r5, [r2, #-4]
 	bl	_trata_uint
 	ldmfd	sp!, {R4-R11, pc}
 	
@@ -261,7 +256,7 @@ _trata_uint:
 	mov 	r11, r0
 	mov 	r10, r1
 	mov 	r5, #0
-	ldr 	r0, [r3]
+	ldr 	r0, [r2], #4
 	@dividir por 10, jogar na pilha o modulo
 _trata_uint_loop:	
 	cmp 	r0, #0

@@ -24,19 +24,29 @@ _trata_hex_long:
 	@add 	r3, r3, #4
 	@trata o long falso
 	@o long é alinhado em multiplos de 8
-	and	r3, r2, #0x8
+	@-----------------------------------
+	@os elementos de interesse estão em r2 e r2 + 4
+	@ou r2 + 4 e r2 + 8
+	@r2 tem que estar alinhado em 8
+	and	r3, r2, #7
 	cmp 	r3, #0
+	addne	r2, r2, #4
+	@agora r2 aponta para os elementos
 	@--------------------------
-	ldr 	r3, [r2, #4]
+	@se o mais significativo é 0,
+	@trata só o menos significativo
+	ldr	r3, [r2, #4]
 	cmp 	r3, #0
-	moveq 	r3, r4
 	beq 	_trata_hex_short
+	@e avança para pular o mais significativo
+	addeq	r2, r2, #4
 	ldmeqfd sp!, {R4-R11, lr}
 	@----------------------------
-	mov 	r3, r4
-	add 	r3, r3, #4
+	@se não, então, tratar primeiro a mais
+	add	r2, r2, #4
 	bl 	_trata_hex_short
-	mov 	r3, r4
+	@e depois a menos significativa
+	sub	r2, r2, #-8
 	@usa um buffer auxiliar
 	mov 	r10, r1
 	ldr 	r1, =auxbuffer
