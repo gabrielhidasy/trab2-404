@@ -9,26 +9,28 @@
 _start:	
 main:
 	ldr	r0, =mystring
-	mov	r1, #0x6
-	mov 	r2, #0xD
+	ldr		r1, =mystring2
+	mov 	r2, #0x1
 	mov 	r3, #0xE
-	stmfd	sp!, {r3}
+	mov		r3, r3, lsl #28
+	stmfd	sp!, {r1}
+	mov		r3, #0
 	stmfd	sp!, {r2}
-	stmfd	sp!, {r6}
+	stmfd	sp!, {r3}
 	@ldr 	r3, =caracter3
-	bl	myprintf
+	bl	myscanf
 	ldmfd 	sp!, {r3}
 	ldr	r0, =mystring
-	ldr	r1, =caracter1
-	ldrb	r1, [r1]
-	ldr 	r2, =caracter2
-	ldrb 	r2, [r2]
-	ldr 	r3, =caracter4
-	ldrb	r3, [r3]
-	stmfd	sp!, {r3}
-	ldr 	r3, =caracter3
-	ldrb 	r3, [r3]
-	@bl 	myprintf
+	ldr	r1, =mystring2
+	@ldrb	r1, [r1]
+	@ldr 	r2, =caracter2
+	@ldrb 	r2, [r2]
+	@ldr 	r3, =caracter4
+	@ldrb	r3, [r3]
+	@stmfd	sp!, {r3}
+	@ldr 	r3, =caracter3
+	@ldrb 	r3, [r3]
+	bl 	myprintf
 __mainend:
 	mov	r7, #1
 	svc	0
@@ -36,7 +38,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"uca %x\n"
+	.asciz	"%s"
 	.asciz	"garbage"
 mystring2:
 	.asciz 	"Hello Garbage\n"

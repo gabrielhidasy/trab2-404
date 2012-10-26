@@ -55,6 +55,7 @@ _myscanf_loop:
 _myscanf_out:
 	ldr 	r10, =bufferin
 	sub	r0, r3, r10
+	mov 	r0, r9
 	@deixar a pilha limpa, gravar o numero
 	@de caracteres lidos em r0, e retornar
 	@ao programa principal

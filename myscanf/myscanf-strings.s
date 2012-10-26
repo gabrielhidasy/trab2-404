@@ -11,10 +11,12 @@ _le_caracter:
 	strb	r4, [r5]
 	mov 	pc, lr
 _le_string:
+	stmfd sp!, {r4-r11, lr}
+	ldr	r5, [r11], #4
+_le_string_loop:
 	@get caracter from input buffer
 	ldrb	r4, [r2], #1
 	@load the adress to store it
-	ldr	r5, [r11], #4
 	@save the caracter to the string buffer
 	strb	r4, [r5], #1
 	@compare the caracter with 0
@@ -22,5 +24,5 @@ _le_string:
 	@the first 0, it is used to identify
 	@the end of the string
 	cmp	r4, #0
-	bne	_le_string
-	mov	pc, lr
+	bne	_le_string_loop
+	ldmfd	sp!, {r4-r11, pc}

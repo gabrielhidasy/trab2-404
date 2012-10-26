@@ -78,6 +78,7 @@ _end:
 	mov r1, r0
 	mov r0, r5 
 	bl syscallw
+	mov	r1, r0
 	@e sair de volta para main
 	ldmfd sp!, {R4-R11, lr}
 	@desempilhar os registradores usados
@@ -107,46 +108,54 @@ trata_mascaras:
 	@r2 tem o endereço de memoria do argumento
 	@carrega o proximo caracter depois da mascara em r4
 	ldrb 	r4, [r0], #1
+	stmfd	sp!, {r4}
 	cmp 	r4, #'c'
 	bleq 	_trata_char
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'c'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'d'
 	bleq 	_trata_int
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'d'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'s'
 	bleq 	_trata_str
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'s'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'x'
 	bleq 	_trata_hex_short
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'x'
-	ldmeqfd sp!, {R4-R12, pc}
 
+	ldmeqfd sp!, {R4-R12, pc}
+	ldmeqfd	sp!, {r4}
 	cmp 	r4, #'o'
 	bleq 	_trata_oct_short
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'o'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'l'
 	bleq 	_trata_longs
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'l'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'u'
 	bleq	_trata_uint
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'u'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	
 	@half trata como normal
@@ -172,69 +181,79 @@ _tr_str_loop:
 	
 	
 _trata_longs:
-	stmfd 	sp!, {R4-R11,lr}
+	stmfd 	sp!, {R4-R12,lr}
 	@le que tipo de long tratar
 	ldrb 	r4, [r0], #1
-	
+	stmfd	sp!, {r4}	
 	cmp 	r4, #'x'
 	bleq	 _trata_hex_short @nomes infelizes
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp 	r4, #'x'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'o'
 	bleq	_trata_oct_short
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp 	r4, #'o'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'u'
 	bleq	_trata_uint
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp 	r4, #'u'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'d'
 	bleq	_trata_int
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp 	r4, #'d'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'l'
 	bleq	_trata_long_longs
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp 	r4, #'l'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
-	mov 	pc, lr
-	
+	b 	myprintf_error	
+
 _trata_long_longs:
-	stmfd 	sp!, {R4-R11,lr}
+	stmfd 	sp!, {R4-R12,lr}
 	ldrb 	r4, [r0], #1
+	stmfd	sp!, {r4}
 	
 	cmp 	r4, #'x'
 	bleq	 _trata_hex_long
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'x'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	
 	cmp 	r4, #'o'
 	bleq	_trata_oct_long
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'o'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'u'
 	bleq	_pre_trata_luint
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'u'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'d'
 	bleq	_trata_lint
-	ldrb	r4, [r0, #-1]
+	ldmfd sp, {r4}
 	cmp	r4, #'d'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
-	mov	pc, lr
+	b	myprintf_error
 	
 myprintf_error:
 	mov	r0, #-1

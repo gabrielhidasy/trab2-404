@@ -13,8 +13,8 @@ _trata_lint:
 	stmfd 	sp!, {R4-R11, lr}
 	@o problema do r2
 	and 	r4, r2, #7
-	cmp	r4, #0
-	addne	r2, r2, #4
+	cmp		r4, #0
+	addeq	r2, r2, #4
 	ldr 	r4, [r2, #4]
 	mov 	r4, r4, lsr #31
 	@se o resultado é 0, basta imprimir
@@ -27,14 +27,14 @@ _trata_lint:
 	mov 	r4, #'-'
 	strb	r4, [r1], #1
 	@agora negai sua origem
-	ldr 	r4, [r2, #4]
-	ldr 	r5, [r2]
-	rsb	r4, r4, #0
+	ldr 	r5, [r2, #4]
+	ldr 	r4, [r2]
+	rsb		r4, r4, #0
 	rsb   	r5, r5, #0
-	sub 	r4, r4, #1
+	sub 	r5, r5, #1
 	@como é um numero de 64 bits só
-	str 	r4, [r2, #4]
-	str 	r5, [r2]
+	str 	r5, [r2, #4]
+	str 	r4, [r2]
 	bl 	_padding_trata_lint
 	ldmfd sp!, {R4-R11, pc}
 
@@ -121,7 +121,7 @@ _trata_luint:
 	@subtrações sucessivas
 	and	r4, r2, #8
 	cmp	r4, #0
-	addne	r2, #4
+	addeq	r2, #4
 	@carrega argumento em r5:r4
 	ldr 	r5, [r2, #4]
 	ldr 	r4, [r2]

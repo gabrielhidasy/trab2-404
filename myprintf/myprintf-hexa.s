@@ -11,18 +11,19 @@ _trata_hex_long:
 	@r2 e r2+4 ou r2+4 e r2+8
 	and 	r3, r2, #7
 	cmp 	r3, #0
-	addne	r2, #4
+	addeq	r2, r2, #4
 	@r2 tem o endereço do parametro
-	ldr	r0, [r2], #4
+	ldr	r0, [r2], #4	
 	ldr	r1, [r2], #4
-	@basta comparar com a mascara 7
-	@somar 48, se maior que 7 erro
+	@basta comparar com a mascara F
+	@somar 48, se maior que 9 soma 39
 	@por na pilha e deslocar
 	mov 	r5, #0
 _trata_hex_long_loop:
-	and 	r4, r0, #0x7
+	and 	r4, r0, #0xF
 	add 	r4, r4, #48
-	cmp 	r4, #'7'
+	cmp 	r4, #'9'
+	addgt	r4, r4, #39
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	bl	long4lsr
