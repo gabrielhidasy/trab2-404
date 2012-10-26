@@ -1,6 +1,7 @@
 .global myprintf
-.type myprintf, %function
-
+.type	myprintf, %function
+.global	myprintf_error
+.type 	myprintf_error, %function
 	@myprintf recebe em r0 um buffer com uma string
 	@que pode conter modificadores que por sua vez
 	@requerem parametros a frente
@@ -14,7 +15,10 @@ myprintf:
 	mov ip, sp
 	@salvar registradores na pilha
 	stmfd sp!, {r4-r11, lr}
+	@grava o valor inicial da pilha na  memoria
 	mov fp, ip
+	ldr	ip, =stack_init
+	str	sp, [ip]
 	mov r1, #0
 	mov r2, #-1
 	mov r3, #0
@@ -164,8 +168,20 @@ _trata_long_longs:
 	cmp	r4, #'d'
 	bleq	_trata_lint
 	ldmfd 	sp!, {R4-R11, pc}
+myprintf_error:
+	mov	r0, #-1
+	@limpa pilha
+	ldr	sp, =stack_init
+	ldr	sp, [sp]
+	ldmfd sp!, {R4-R11, lr}
+	@desempilhar os registradores usados
+	ldmfd sp!, {R1-R3}
+	mov pc, lr
+
 .data
 buffer:
-	.skip 2000, 0
+	.skip 2000,0
+stack_init:
+	.word 0x0
 
 	

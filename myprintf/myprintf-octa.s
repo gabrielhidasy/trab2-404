@@ -65,7 +65,7 @@ _trata_oct_long_loop:
 	mov 	r5, r5, lsr #3
 	mov	r4, r4, lsr r6
 	sub 	r6, r6, #3
-	bl	_octtochar
+	add	r4, r4, #48
 	strb	r4, [r1], #1
 	add	r11, r11, #1
 	b	_trata_oct_long_loop
@@ -79,7 +79,7 @@ _finaliza_loop:
 	mov 	r10, r10, lsr #30
 	and 	r10, r10, #3
 	add 	r4, r4, r10
-	bl 	_octtochar
+	add	r4, r4, #48
 	strb	r4, [r1], #1
 	@--------------------------------
 	@carrega a parte menos significativa do numero
@@ -131,45 +131,32 @@ _zera_buffer_octa:
 	
 _trata_oct_short:
 	stmfd sp!, {R4-R11,lr}
-	ldr r3, [r3]
-	@pré tratamento dos primeiros 2 bits da sequencia
-	mov r5, #0xC0000000
-	mov r6, #30
-	and r4, r3, r5
-	mov r4, r3, lsr #30
-	cmp r4, #0
-	blne _octtochar 
-	strneb r4, [r1], #1
-	movne r5, #0x38000000
-	movne r6, #27
-	bne _tr_oc_sh_loop
-	@Acha o char deles e se diferente de 0 poe no buffer
-	mov r5, #0x38000000
-	mov r6, #27
-_inner_trtocs_loop:
-	cmp r6, #0
-	strltb r4, [r1], #1
-	ldmltfd sp!, {R4-R11, pc}
-	and r4, r3, r5
-	cmp r4, #0
-	moveq r5, r5, lsr #3
-	subeq r6, r6, #3
-	beq _inner_trtocs_loop
-	@em r3 está o valor do hexa a imprimir
-_tr_oc_sh_loop:
-	cmp r6, #0
-	ldmltfd sp!, {R4-R11, pc}
-	and r4, r3, r5
-	mov r5, r5, lsr #3
-	mov r4, r4, lsr r6
-	sub r6, r6, #3
-	bl _octtochar
-	strb r4, [r1], #1
-	b _tr_oc_sh_loop
-
-_octtochar:
-	add r4, r4, #48
-	mov pc, lr
+	@r3 tem o endereço do parametro
+	ldr	r3, [r3]
+	@basta comparar com a mascara 7
+	@somar 48, se maior que 7 erro
+	@por na pilha e deslocar
+	mov 	r5, #0
+_trata_oct_short_loop:
+	and 	r4, r3, #0x7
+	add 	r4, r4, #48
+	cmp 	r4, #'7'
+	bgt	myprintf_error
+	cmp	r4, #'0'
+	blt	myprintf_error
+	stmfd	sp!, {r4}
+	add	r5, r5, #1
+	mov	r3, r3, lsr #3
+	cmp 	r3, #0
+	beq	_trata_oct_short_out
+	b	_trata_oct_short_loop 
+_trata_oct_short_out:
+	ldmfd	sp!, {r4}
+	strb	r4, [r1], #1
+	sub 	r5, r5, #1
+	cmp 	r5, #0
+	bne	_trata_oct_short_out
+	ldmfd	sp!,  {R4-R11, pc}
 
 .data
 auxbuffer:

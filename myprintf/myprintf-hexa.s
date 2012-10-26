@@ -83,40 +83,36 @@ _loop_hex_long_zerar:
 	
 _trata_hex_short:
 	stmfd sp!, {R4-R11,lr}
-	@r11 é o contador de digitos colocados
-	@no buffer, será usado para padding
-	mov r11, #0
-	ldr r3, [r3]
-	mov r5, #0xF0000000
-	mov r6, #28
-_inner_trthxs_loop:
-	cmp r6, #0
-	strltb r4, [r1], #1
-	ldmltfd sp!, {R4-R11, pc}
-	and r4, r3, r5
-	cmp r4, #0
-	moveq r5, r5, lsr #4
-	subeq r6, r6, #4
-	beq _inner_trthxs_loop
-	@em r3 está o valor do hexa a imprimir
-_tr_hx_sh_loop:
-	cmp r6, #0
-	ldmltfd sp!, {R4-R11, pc}
-	and r4, r3, r5
-	mov r5, r5, lsr #4
-	mov r4, r4, lsr r6
-	sub r6, r6, #4
-	bl _hextochar
-	strb r4, [r1], #1
-	add r11, r11, #1
-	b _tr_hx_sh_loop
-_hextochar:
-	add r4, r4, #48
-	cmp r4, #57
-	addgt r4, r4, #39
-	mov pc, lr
+	@r3 tem o endereço do parametro
+	ldr	r3, [r3]
+	@basta comparar com a mascara F
+	@somar 48, se maior que 9 somar
+	@39 e por na pilha e deslocar
+	mov 	r5, #0
+_trata_hex_short_loop:
+	and 	r4, r3, #0xF
+	add 	r4, r4, #48
+	cmp 	r4, #'9'
+	addgt	r4, r4, #39
+	cmp 	r4, #'f'
+	bgt	myprintf_error
+	cmp	r4, #'0'
+	blt	myprintf_error
+	stmfd	sp!, {r4}
+	add	r5, r5, #1
+	mov	r3, r3, lsr #4
+	cmp 	r3, #0
+	beq	_trata_hex_short_out
+	b	_trata_hex_short_loop 
+_trata_hex_short_out:
+	ldmfd	sp!, {r4}
+	strb	r4, [r1], #1
+	sub 	r5, r5, #1
+	cmp 	r5, #0
+	bne	_trata_hex_short_out
+	ldmfd	sp!,  {R4-R11, pc}
 
-.data
+	.data
 auxbuffer:
 	.skip 2000, 0
 	

@@ -5,10 +5,11 @@
 	.type	main, %function
 @sem _start na raspberry pi ao separar o arquivo em diretorios
 @o programa se iniciava pela myprintf-hexa.s, não dava certo
+@com ele não compila do simulador
 _start:	
 main:
 	ldr	r0, =mystring
-	mov	r1, #0x0
+	mov	r1, #0x6
 	mov 	r2, #0xD
 	mov 	r3, #0xE
 	stmfd	sp!, {r3}
@@ -25,7 +26,7 @@ main:
 	stmfd	sp!, {r3}
 	ldr 	r3, =caracter3
 	ldrb 	r3, [r3]
-	bl 	myprintf
+	@bl 	myprintf
 __mainend:
 	mov	r7, #1
 	svc	0
@@ -33,7 +34,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"Hello World %lld\n"
+	.asciz	"ola fia duma ronca i fuca %lx %lx %lx\n"
 	.asciz	"garbage"
 mystring2:
 	.asciz 	"Hello Garbage\n"

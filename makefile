@@ -13,8 +13,8 @@ ldflags := -g
 
 all:  link
 link: assembly
-ifeq ($(shell uname -m),x86_x64)
-	arm-elf-ld $(ldflags) -Ttext=0 ../lab7/sys.o $(OBJ) -o prog
+ifeq ($(shell uname -m),x86_64)
+	arm-elf-ld $(ldflags) -Ttext=0 support/sys.o $(OBJ) -o prog
 else	
 	ld $(ldflags) $(OBJ) -o prog
 endif
