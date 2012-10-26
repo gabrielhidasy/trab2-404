@@ -4,26 +4,30 @@
 .type _trata_hex_short, %function
 _trata_hex_long:
 	stmfd sp!, {R4-R11,lr}
-	@numeros longs tem 2 argumentos de 4 bytes, logo
-	@alem do incremento padrão há mais um incremento
-	@em r2
-	add r2, r2, #1
-	@O numero long é armazenado sempre
-	@começando em um par, porem como o argumento
-	@0 é o buffer de entrada, é preciso somar
-	@1 quando r2 é par
-	and 	r4, r2, #1
-	cmp 	r2, #0
-	addne 	r2, r2, #1
-	@alem disso, nesse caso r3 é o proximo 
-	addne 	r3, r3, #4
-	@carrega o mais significativo e avança
-	@Salva r3 antes
-	mov 	r4, r3
-	add 	r3, r3, #4
+	@@numeros longs tem 2 argumentos de 4 bytes, logo
+	@@alem do incremento padrão há mais um incremento
+	@@em r2
+	@add r2, r2, #1
+	@@O numero long é armazenado sempre
+	@@começando em um par, porem como o argumento
+	@@0 é o buffer de entrada, é preciso somar
+	@@1 quando r2 é par
+	@@and 	r4, r2, #1
+	@@cmp 	r2, #0
+	@@addne 	r2, r2, #1
+	@@alem disso, nesse caso r3 é o proximo 
+	@@addne 	r3, r3, #4
+	
+	@@carrega o mais significativo e avança
+	@@Salva r3 antes
+	@mov 	r4, r3
+	@add 	r3, r3, #4
 	@trata o long falso
+	@o long é alinhado em multiplos de 8
+	and	r3, r2, #0x8
+	cmp 	r3, #0
 	@--------------------------
-	ldr 	r3, [r3]
+	ldr 	r3, [r2, #4]
 	cmp 	r3, #0
 	moveq 	r3, r4
 	beq 	_trata_hex_short
@@ -83,8 +87,8 @@ _loop_hex_long_zerar:
 	
 _trata_hex_short:
 	stmfd sp!, {R4-R11,lr}
-	@r3 tem o endereço do parametro
-	ldr	r3, [r3]
+	@r2 tem o endereço do parametro
+	ldr	r3, [r2], #4
 	@basta comparar com a mascara F
 	@somar 48, se maior que 9 somar
 	@39 e por na pilha e deslocar

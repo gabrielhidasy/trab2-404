@@ -13,6 +13,8 @@ main:
 	mov 	r2, #0xD
 	mov 	r3, #0xE
 	stmfd	sp!, {r3}
+	stmfd	sp!, {r2}
+	stmfd	sp!, {r6}
 	@ldr 	r3, =caracter3
 	bl	myprintf
 	ldmfd 	sp!, {r3}
@@ -34,7 +36,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"ola fia duma ronca i fuca %lx %lx %lx\n"
+	.asciz	"ola fia duma ronca i fuca %x\n"
 	.asciz	"garbage"
 mystring2:
 	.asciz 	"Hello Garbage\n"

@@ -15,12 +15,15 @@ myprintf:
 	mov ip, sp
 	@salvar registradores na pilha
 	stmfd sp!, {r4-r11, lr}
+	mov 	fp, ip
 	@grava o valor inicial da pilha na  memoria
-	mov fp, ip
 	ldr	ip, =stack_init
 	str	sp, [ip]
-	mov r1, #0
-	mov r2, #-1
+	mov 	r1, #0
+	@em r2 fica o endereço do parametro atual
+	mov 	r2, sp
+	add	r2, r2, #36
+	@(9 regs) 
 	mov r3, #0
 	@guarda no fp o valor original da pilha
 	@em r4 guardo o endereço do buffer em uso, r5 o inicio dele
@@ -52,7 +55,7 @@ _loop:
 	b _loop
 
 _mask:
-	add r2, r2, #1
+	@add r2, r2, #1
 	stmfd sp!, {r0}
 	mov r0, r9
 	mov r1, r4
@@ -97,10 +100,11 @@ _comploop:
 trata_mascaras:
 	stmfd 	sp!, {R4-R12, lr}
 	add 	fp, sp, #36
-	mov 	r4, #4
-	mul 	r4, r2, r4
-	add 	r3, r3, r4
-	@r3 tem o endereço de memoria do argumento 
+	@@mov 	r4, #4
+	@@mul 	r4, r2, r4
+	@@add 	r3, r3, r4
+	@@r3 tem o endereço de memoria do argumento
+	@r2 tem o endereço de memoria do argumento
 	@carrega o proximo caracter depois da mascara em r4
 	ldrb 	r4, [r0], #1
 	cmp 	r4, #'c'
@@ -124,12 +128,12 @@ trata_mascaras:
 	mov 	pc, lr
 
 _trata_char:
-	ldr 	r3, [r3] 
+	ldr 	r3, [r2], #4 
 	strb 	r3, [r1], #1
 	mov 	pc, lr
 	
 _trata_str:
-	ldr 	r3, [r3]
+	ldr 	r3, [r2], #4
 _tr_str_loop:	
 	ldrb 	r4, [r3], #1
 	cmp 	r4, #0
