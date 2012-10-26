@@ -5,7 +5,8 @@
 
 _trata_hex_long:
 	stmfd sp!, {R4-R11,lr}
-	@save r1 in a safe place
+	@save r1 and r0  in a safe place
+	mov	r9, r0 
 	mov	r10, r1
 	@r2 e r2+4 ou r2+4 e r2+8
 	and 	r3, r2, #7
@@ -27,8 +28,9 @@ _trata_hex_long_loop:
 	bl	long4lsr
 	cmp 	r1, #0
 	cmpeq	r0, #0
-	@recuperate r1
+	@recuperate r1 e r0
 	moveq	r1, r10
+	moveq	r0, r9
 	beq	_trata_hex_long_out
 	b	_trata_hex_long_loop 
 _trata_hex_long_out:
