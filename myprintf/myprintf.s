@@ -112,43 +112,43 @@ trata_mascaras:
 	bleq 	_trata_char
 	ldmfd	sp!, {r4}
 	cmp	r4, #'c'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'d'
 	bleq 	_trata_int
 	ldmfd	sp!, {r4}
 	cmp	r4, #'d'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'s'
 	bleq 	_trata_str
 	ldmfd	sp!, {r4}
 	cmp	r4, #'s'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'x'
 	bleq 	_trata_hex_short
 	ldmfd	sp!, {r4}
 	cmp	r4, #'x'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'o'
 	bleq 	_trata_oct_short
 	ldmfd	sp!, {r4}
 	cmp	r4, #'o'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'l'
 	bleq 	_trata_longs
 	ldmfd	sp!, {r4}
 	cmp	r4, #'l'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'u'
 	bleq	_trata_uint
 	ldmfd	sp!, {r4}
 	cmp	r4, #'u'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 	
 	@half trata como normal
 	cmp 	r4, #'h'
@@ -182,31 +182,31 @@ _trata_longs:
 	bleq	 _trata_hex_short @nomes infelizes
 	ldmfd	sp!, {r4}
 	cmp 	r4, #'x'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'o'
 	bleq	_trata_oct_short
 	ldmfd	sp!, {r4}
 	cmp 	r4, #'o'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'u'
 	bleq	_trata_uint
 	ldmfd	sp!, {r4}
 	cmp 	r4, #'u'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'d'
 	bleq	_trata_int
 	ldmfd	sp!, {r4}
 	cmp 	r4, #'d'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'l'
 	bleq	_trata_long_longs
 	ldmfd	sp!, {r4}
 	cmp 	r4, #'l'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 	mov 	pc, lr
 	
 _trata_long_longs:
@@ -218,25 +218,25 @@ _trata_long_longs:
 	bleq	 _trata_hex_long
 	ldmfd	sp!, {R4}
 	cmp	r4, #'x'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 	
 	cmp 	r4, #'o'
 	bleq	_trata_oct_long
 	ldmfd	sp!, {R4}
 	cmp	r4, #'o'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'u'
 	bleq	_pre_trata_luint
 	ldmfd	sp!, {R4}
 	cmp	r4, #'u'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'d'
 	bleq	_trata_lint
 	ldmfd	sp!, {R4}
 	cmp	r4, #'d'
-	ldmeqfd sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, pc}
 	mov	pc, lr
 	
 myprintf_error:
