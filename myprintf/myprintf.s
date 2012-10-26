@@ -256,13 +256,13 @@ _trata_long_longs:
 	b	myprintf_error
 	
 myprintf_error:
-	mov	r0, #-1
 	@limpa pilha
 	ldr	sp, =stack_init
 	ldr	sp, [sp]
 	ldmfd sp!, {R4-R11, lr}
 	@desempilhar os registradores usados
 	ldmfd sp!, {R1-R3}
+	mov	r0, #-1
 	mov pc, lr
 
 .data
