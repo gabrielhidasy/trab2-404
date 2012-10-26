@@ -208,7 +208,7 @@ _trata_longs:
 	mov 	pc, lr
 	
 _trata_long_longs:
-	stmfd 	sp!, {R4-R11,lr}
+	stmfd 	sp!, {R4-R12,lr}
 	ldrb 	r4, [r0], #1
 	
 	cmp 	r4, #'x'
@@ -237,13 +237,13 @@ _trata_long_longs:
 	mov	pc, lr
 	
 myprintf_error:
-	mov	r0, #-1
 	@limpa pilha
 	ldr	sp, =stack_init
 	ldr	sp, [sp]
 	ldmfd sp!, {R4-R11, lr}
 	@desempilhar os registradores usados
 	ldmfd sp!, {R1-R3}
+	mov	r0, #-1
 	mov pc, lr
 
 .data
