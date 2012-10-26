@@ -36,7 +36,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"ola fia duma ronca i fuca %x\n"
+	.asciz	"uca %x\n"
 	.asciz	"garbage"
 mystring2:
 	.asciz 	"Hello Garbage\n"

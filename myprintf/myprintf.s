@@ -109,22 +109,29 @@ trata_mascaras:
 	ldrb 	r4, [r0], #1
 	cmp 	r4, #'c'
 	bleq 	_trata_char
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'d'
 	bleq 	_trata_int
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'s'
 	bleq 	_trata_str
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'x'
 	bleq 	_trata_hex_short
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'o'
 	bleq 	_trata_oct_short
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'l'
 	bleq 	_trata_longs
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp	r4, #'u'
 	bleq	_trata_uint
+	ldmeqfd sp!, {R4-R12, lr}
 	@half trata como normal
 	cmp 	r4, #'h'
 	beq	trata_mascaras
-	ldmfd 	sp!, {R4-R12, lr}
+	ldmeqfd sp!, {R4-R12, lr}
 	mov 	pc, lr
 
 _trata_char:
@@ -149,15 +156,19 @@ _trata_longs:
 	ldrb 	r4, [r0], #1
 	cmp 	r4, #'x'
 	bleq	 _trata_hex_short @nomes infelizes
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'o'
-	bleq	_trata_oct_short 
+	bleq	_trata_oct_short
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'u'
 	bleq	_trata_uint
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp	r4, #'d'
 	bleq	_trata_int
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp	r4, #'l'
 	bleq	_trata_long_longs
-	ldmfd 	sp!, {R4-R11, lr}
+	ldmeqfd sp!, {R4-R12, lr}
 	mov 	pc, lr
 	
 _trata_long_longs:
@@ -165,13 +176,17 @@ _trata_long_longs:
 	ldrb 	r4, [r0], #1
 	cmp 	r4, #'x'
 	bleq	 _trata_hex_long
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'o'
 	bleq	_trata_oct_long
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp 	r4, #'u'
 	bleq	_pre_trata_luint
+	ldmeqfd sp!, {R4-R12, lr}
 	cmp	r4, #'d'
 	bleq	_trata_lint
-	ldmfd 	sp!, {R4-R11, pc}
+	ldmeqfd sp!, {R4-R12, lr}
+	mov	pc, lr
 myprintf_error:
 	mov	r0, #-1
 	@limpa pilha
