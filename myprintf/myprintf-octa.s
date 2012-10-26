@@ -6,12 +6,12 @@
 _trata_oct_long:
 	stmfd sp!, {R4-R11,lr}
 	@r2 e r2+4 ou r2+4 e r2+8
-	and 	r3, r2, #8
+	and 	r3, r2, #7
 	cmp 	r3, #0
 	addne	r2, #4
 	@r2 tem o endereço do parametro
-	ldr	r1, [r2], #4
 	ldr	r0, [r2], #4
+	ldr	r1, [r2], #4
 	@basta comparar com a mascara 7
 	@somar 48, se maior que 7 erro
 	@por na pilha e deslocar

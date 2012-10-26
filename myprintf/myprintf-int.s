@@ -11,7 +11,11 @@ _trata_lint:
 	@ler o bit mais significativo do argumento mais
 	@significativo
 	stmfd 	sp!, {R4-R11, lr}
-	ldr 	r4, [r3, #8]
+	@o problema do r2
+	and 	r4, r2, #7
+	cmp	r4, #0
+	addne	r2, r2, #4
+	ldr 	r4, [r2, #4]
 	mov 	r4, r4, lsr #31
 	@se o resultado é 0, basta imprimir
 	@o numero normalmente
@@ -23,14 +27,14 @@ _trata_lint:
 	mov 	r4, #'-'
 	strb	r4, [r1], #1
 	@agora negai sua origem
-	ldr 	r4, [r3, #8]
-	ldr 	r5, [r3, #4]
+	ldr 	r4, [r2, #4]
+	ldr 	r5, [r2]
 	rsb	r4, r4, #0
 	rsb   	r5, r5, #0
 	sub 	r4, r4, #1
 	@como é um numero de 64 bits só
-	str 	r4, [r3, #8]
-	str 	r5, [r3, #4]
+	str 	r4, [r2, #4]
+	str 	r5, [r2]
 	bl 	_padding_trata_lint
 	ldmfd sp!, {R4-R11, pc}
 
@@ -59,6 +63,8 @@ _copy_int_to_exit:
 	bne	_copy_int_to_exit
 	@moveq	r1, r4
 	ldmeqfd	sp!, {r4 - r11, pc}
+
+	
 _pre_trata_luint:
 	@essa função da um buffer auxiliar para a de inteiros
 	@e faz o padding da string, alem disso é responsavel
@@ -226,9 +232,10 @@ _long_int_end:
 	mov 	r0, r10
 	mov 	r1, r11
 	ldmfd sp!, {R2-R11}
-	
 	@----------------------------------------
 	ldmfd	sp!, {R4-R11, pc}
+	@-----------------------------------------
+	@32 bits ahead
 _trata_int:
 	@se o primeiro bit é 0
 	@simplesmente chamar a _trata_uint
@@ -247,7 +254,8 @@ _trata_int:
 	@agora negai sua origem
 	rsb	r5, r5, #0
 	@em r5 tem o inteiro negado
-	str 	r5, [r2, #-4]
+	sub	r2, r2, #4
+	str 	r5, [r2]
 	bl	_trata_uint
 	ldmfd	sp!, {R4-R11, pc}
 	
