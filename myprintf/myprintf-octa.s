@@ -21,7 +21,7 @@ _trata_oct_long_loop:
 	add 	r4, r4, #48
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
-	b	long3lsr
+	bl	long3lsr
 	cmp 	r1, #0
 	cmpeq	r0, #0
 	beq	_trata_oct_long_out

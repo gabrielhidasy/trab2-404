@@ -22,7 +22,7 @@ _trata_hex_long_loop:
 	cmp 	r4, #'7'
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
-	b	long4lsr
+	bl	long4lsr
 	cmp 	r1, #0
 	cmpeq	r0, #0
 	beq	_trata_hex_long_out
