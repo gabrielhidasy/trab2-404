@@ -19,10 +19,6 @@ _trata_oct_long:
 _trata_oct_long_loop:
 	and 	r4, r0, #0x7
 	add 	r4, r4, #48
-	cmp 	r4, #'7'
-	bgt	myprintf_error
-	cmp	r4, #'0'
-	blt	myprintf_error
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	b	long3lsr
@@ -50,9 +46,6 @@ _trata_oct_short_loop:
 	and 	r4, r3, #0x7
 	add 	r4, r4, #48
 	cmp 	r4, #'7'
-	bgt	myprintf_error
-	cmp	r4, #'0'
-	blt	myprintf_error
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	mov	r3, r3, lsr #3

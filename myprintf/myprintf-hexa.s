@@ -2,98 +2,39 @@
 .global	_trata_hex_short
 .type _trata_hex_long, %function
 .type _trata_hex_short, %function
+
 _trata_hex_long:
 	stmfd sp!, {R4-R11,lr}
-	@@numeros longs tem 2 argumentos de 4 bytes, logo
-	@@alem do incremento padrão há mais um incremento
-	@@em r2
-	@add r2, r2, #1
-	@@O numero long é armazenado sempre
-	@@começando em um par, porem como o argumento
-	@@0 é o buffer de entrada, é preciso somar
-	@@1 quando r2 é par
-	@@and 	r4, r2, #1
-	@@cmp 	r2, #0
-	@@addne 	r2, r2, #1
-	@@alem disso, nesse caso r3 é o proximo 
-	@@addne 	r3, r3, #4
-	
-	@@carrega o mais significativo e avança
-	@@Salva r3 antes
-	@mov 	r4, r3
-	@add 	r3, r3, #4
-	@trata o long falso
-	@o long é alinhado em multiplos de 8
-	@-----------------------------------
-	@os elementos de interesse estão em r2 e r2 + 4
-	@ou r2 + 4 e r2 + 8
-	@r2 tem que estar alinhado em 8
-	and	r3, r2, #7
+	@r2 e r2+4 ou r2+4 e r2+8
+	and 	r3, r2, #8
 	cmp 	r3, #0
-	addne	r2, r2, #4
-	@agora r2 aponta para os elementos
-	@--------------------------
-	@se o mais significativo é 0,
-	@trata só o menos significativo
-	ldr	r3, [r2, #4]
-	cmp 	r3, #0
-	beq 	_trata_hex_short
-	@e avança para pular o mais significativo
-	addeq	r2, r2, #4
-	ldmeqfd sp!, {R4-R11, lr}
-	@----------------------------
-	@se não, então, tratar primeiro a mais
-	add	r2, r2, #4
-	bl 	_trata_hex_short
-	@e depois a menos significativa
-	sub	r2, r2, #-8
-	@usa um buffer auxiliar
-	mov 	r10, r1
-	ldr 	r1, =auxbuffer
-	bl 	_trata_hex_short
-	@no auxbuffer tem a parte menos significativa
-	@copiar com padding 8 para a saida
-	@carrega o valor original do buffer
-	ldr r5, =auxbuffer
-	@acha o tamanho do buffer
-	sub r6, r1, r5
-	@carrega o valor do padding em r5
-	mov r5, #8
-	@acha o valor do padding
-	sub r5, r5, r6
-	@e o numero de inteiros
-	mov r7, #8
-	sub r7, r7, r5
-	@recupera o buffer de escrita original
-	mov r1, r10
-	mov r6, #'0'
+	addne	r2, #4
+	@r2 tem o endereço do parametro
+	ldr	r1, [r2], #4
+	ldr	r0, [r2], #4
+	@basta comparar com a mascara 7
+	@somar 48, se maior que 7 erro
+	@por na pilha e deslocar
+	mov 	r5, #0
 _trata_hex_long_loop:
-	cmp r5, #0
-	strneb r6, [r1], #1
-	subne r5, r5, #1
-	bne _trata_hex_long_loop
-	@grava o numero
-	ldr 	r6, =auxbuffer
-_trata_hex_long_loop2:
-	ldrb 	r5, [r6], #1
-	cmp 	r7, #0
-	strneb 	r5, [r1], #1
-	sub r7, r7, #1
-	bne _trata_hex_long_loop2
-	mov r3, r4
-	@Zera o buffer auxiliar
-	@preenche de zeros o buffer auxbuffer
-	@pelo numero de bytes usados
-	mov r7, #8
-	mov r8, #0
-	ldr r6, =auxbuffer
-_loop_hex_long_zerar:	
-	strneb	r8, [r6], #1
-	sub r7, r7, #1
-	cmp r7, #0
-	bne _loop_hex_long_zerar
-	ldmfd sp!, {R4-R11, lr}
-	mov pc, lr
+	and 	r4, r0, #0x7
+	add 	r4, r4, #48
+	cmp 	r4, #'7'
+	stmfd	sp!, {r4}
+	add	r5, r5, #1
+	b	long4lsr
+	cmp 	r1, #0
+	cmpeq	r0, #0
+	beq	_trata_hex_long_out
+	b	_trata_hex_long_loop 
+_trata_hex_long_out:
+	ldmfd	sp!, {r4}
+	strb	r4, [r1], #1
+	sub 	r5, r5, #1
+	cmp 	r5, #0
+	bne	_trata_hex_long_out
+	ldmfd	sp!,  {R4-R11, pc}
+
 	
 _trata_hex_short:
 	stmfd sp!, {R4-R11,lr}
@@ -108,10 +49,6 @@ _trata_hex_short_loop:
 	add 	r4, r4, #48
 	cmp 	r4, #'9'
 	addgt	r4, r4, #39
-	cmp 	r4, #'f'
-	bgt	myprintf_error
-	cmp	r4, #'0'
-	blt	myprintf_error
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	mov	r3, r3, lsr #4
