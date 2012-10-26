@@ -1,1 +1,0 @@
-arm-sim --load=matrizes -cycles=100000

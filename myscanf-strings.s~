@@ -1,4 +1,0 @@
-.global _le_caracter
-.type 	_le_caracter, %function
-.global _le_string
-.type _le_string, %function

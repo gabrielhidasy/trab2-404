@@ -1,4 +1,4 @@
-SRC = $(wildcard *.s)
+SRC = $(wildcard */*.s)
 OBJ = $(SRC:.s=.o)
 
 arm-as := as
@@ -14,7 +14,7 @@ ldflags := -g
 all:  link
 link: assembly
 ifeq ($(shell uname -m),x86_x64)
-	arm-elf-as $(ldflags) -Ttext=0 ../lab7/sys.o $(OBJ) -o prog
+	arm-elf-ld $(ldflags) -Ttext=0 ../lab7/sys.o $(OBJ) -o prog
 else	
 	ld $(ldflags) $(OBJ) -o prog
 endif
@@ -24,7 +24,7 @@ assembly:
 	$(arm-as) $(asflags) $< -o $@
 clean:
 	rm prog $(OBJ)
-run: links
+run: link
 ifeq ($(shell uname -m),x86_64)
 	arm-sim --load=prog -cycles=10000
 else	

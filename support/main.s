@@ -3,7 +3,9 @@
 	.global _start
 	.global	main
 	.type	main, %function
-@_start:	
+@sem _start na raspberry pi ao separar o arquivo em diretorios
+@o programa se iniciava pela myprintf-hexa.s, não dava certo
+_start:	
 main:
 	ldr	r0, =mystring
 	mov	r1, #0x0

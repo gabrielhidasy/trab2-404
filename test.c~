@@ -1,6 +1,0 @@
-int main() {
-  long long int a = 0x54546;
-  long long int b = 0x46457;
-  long long int c = a - b;
-  return 0;
-    }

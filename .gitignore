@@ -1,0 +1,14 @@
+# Compiled Source Object code#
+
+*.o
+
+# Package #
+
+*.zip
+*.tar.*
+
+# Temporary #
+
+*~
+
+
