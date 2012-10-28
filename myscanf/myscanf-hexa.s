@@ -21,7 +21,9 @@ _le_hexa_loop:
 	@next char
 	add 	r2, r2, #1
 	@transforms in number
-	bl 	chartonumber
+	sub	r0, r0, #48
+	cmp	r0, #'9'
+	subgt	r0, r0, #39
 	@if its less than zero or greater then F
 	@its not valid, error
 	cmp	r0, #0

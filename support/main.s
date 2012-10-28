@@ -9,19 +9,20 @@
 _start:	
 main:
 	ldr	r0, =mystring
-	ldr		r1, =mystring2
-	mov 	r2, #0x1
-	mov 	r3, #0xE
-	mov		r3, r3, lsl #28
-	stmfd	sp!, {r1}
-	mov		r3, #0
-	stmfd	sp!, {r2}
-	stmfd	sp!, {r3}
+	ldr	r1, =caracter1
+	@mov 	r2, #0x1
+	@mov 	r3, #0xE
+	@mov	r3, r3, lsl #28
+	@stmfd	sp!, {r1}
+	@mov	r3, #0
+	@stmfd	sp!, {r2}
+	@stmfd	sp!, {r3}
 	@ldr 	r3, =caracter3
 	bl	myscanf
-	ldmfd 	sp!, {r3}
-	ldr	r0, =mystring
-	ldr	r1, =mystring2
+	@ldmfd 	sp!, {r3}
+	ldr	r0, =mystring2
+	ldr	r1, =caracter1
+	ldr	r1, [r1]
 	@ldrb	r1, [r1]
 	@ldr 	r2, =caracter2
 	@ldrb 	r2, [r2]
@@ -38,10 +39,10 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%s"
+	.asciz	"%d"
 	.asciz	"garbage"
 mystring2:
-	.asciz 	"Hello Garbage\n"
+	.asciz 	"%+06d"
 
 	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL

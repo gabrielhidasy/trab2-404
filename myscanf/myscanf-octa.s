@@ -21,7 +21,7 @@ _le_octa_loop:
 	@next char
 	add	r2, r2, #1
 	@transforms in number
-	bl 	chartonumber
+	sub	r0, r0, #48
 	@if its less than zero or greater then 7
 	@its not valid, error
 	cmp	r0, #0

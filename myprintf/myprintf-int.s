@@ -13,7 +13,7 @@ _trata_lint:
 	stmfd 	sp!, {R4-R11, lr}
 	@o problema do r2
 	and 	r4, r2, #7
-	cmp		r4, #0
+	cmp	r4, #0
 	addeq	r2, r2, #4
 	ldr 	r4, [r2, #4]
 	mov 	r4, r4, lsr #31
@@ -242,7 +242,7 @@ _trata_int:
 	stmfd 	sp!, {R4-R11,lr}
 	mov 	r4, #1
 	mov	r4, r4, lsl #31
-	ldr 	r5, [r2], #4
+	ldr 	r5, [r2]
 	and 	r4, r4, r5
 	cmp 	r4, #0
 	bleq 	_trata_uint

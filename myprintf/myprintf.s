@@ -45,9 +45,6 @@ _loop:
 	@tratador de mascaras
 	cmp r10, #'%'
 	@O tratador de mascaras recebe em r0 o buffer de leitura
-	@em r1 o buffer de escrita, em r2 o num do argumento atual
-	@(r2 tera permanentemente o atual) e em r3 o fp, de onde
-	@os argumentos podem ser acessados como fp+numarg*4
 	@se não, gravar
 	beq _mask
 	strb r10, [r4], #1
@@ -68,15 +65,14 @@ _mask:
 _end:
 	@coloca um caracter de finalização
 	@no buffer de escrita
-	mov ip, #0
-	strb ip, [r4], #1
+	@mov ip, #0
+	@strb ip, [r4], #1
 	@calcula comprimento da string
-	mov r0, r5
-	bl comp
+	ldr	r0, =buffer
+	sub	r1, r4, r0
 	@envia em r0 um buffer a imprimir e em
 	@r1 o comprimento dele
-	mov r1, r0
-	mov r0, r5 
+	@mov r1, r5 
 	bl syscallw
 	mov	r1, r0
 	@e sair de volta para main
@@ -84,18 +80,6 @@ _end:
 	@desempilhar os registradores usados
 	ldmfd sp!, {R1-R3}
 	mov pc, lr
-
-comp:
-	@recebe um buffer em r0 e retorna o comprimento em r0
-	stmfd sp!, {r4-r11, lr}
-	mov r4, #0
-_comploop:
-	ldrb r5, [r0], #1
-	cmp r5, #0
-	moveq r0, r4
-	ldmeqfd sp!, {r4-r11, pc}
-	add r4, r4, #1
-	b _comploop
 
 	
 trata_mascaras:
@@ -134,9 +118,9 @@ trata_mascaras:
 	bleq 	_trata_hex_short
 	ldmfd sp, {r4}
 	cmp	r4, #'x'
-
-	ldmeqfd sp!, {R4-R12, pc}
 	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
 	cmp 	r4, #'o'
 	bleq 	_trata_oct_short
 	ldmfd sp, {r4}
@@ -160,26 +144,133 @@ trata_mascaras:
 	
 	@half trata como normal
 	cmp 	r4, #'h'
-	beq	trata_mascaras
-	ldmfd sp!, {R4-R12, lr}
+	bleq	trata_mascaras
+	ldmfd sp, {r4}
+	cmp	r4, #'h'	
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	@flag de padding 0
+	cmp 	r4, #'0'
+	bleq	trata_padding_0
+	ldmfd 	sp, {r4}
+	cmp	r4, #'0'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	@flag de padding +
+	cmp 	r4, #'+'
+	bleq	trata_padding_p
+	ldmfd 	sp, {r4}
+	cmp	r4, #'+'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	@flag de padding -
+	cmp 	r4, #'-'
+	bleq	trata_padding_m
+	cmp	r4, #'-'
+	ldmfd 	sp, {r4}
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	@se não for nada disso é a constante maior que 0
+	
 	mov 	pc, lr
 
-_trata_char:
-	ldr 	r3, [r2], #4 
-	strb 	r3, [r1], #1
-	mov 	pc, lr
+trata_padding_0:
+	mov	r8, #'0'
+	@quando se recebe o 0, é preciso ler
+	@o valor de largura a frente
+	@para isso ler ele em um buffer auxiliar,
+	@assumindo que ele é um inteiro de base 10
+	stmfd	sp!, {R4-R11, lr}
+	mov	r6, #0
+	mov	r7, #10
+	@-----------------------------------------
+	@le o numero a frente
+le_width_pad_0:	
+	ldrb 	r5, [r0], #1
+	@assumindo que tem que ser um numero
+	sub 	r5, r5, #48
+	@assim ele cai no espaço de 0 a 9
+	cmp	r5, #9
+	bgt	_continua_padding_0
+	cmp	r5, #0
+	blt	_continua_padding_0
+	@multiplicar o contador por 10
+	mul	r6, r7, r6
+	@somar o numero no contador
+	add	r6, r6, r5
+	b 	le_width_pad_0
+_continua_padding_0:
+	@nesse ponto tem o valor da width em r6 e
+	@o tipo a tratar é o proximo caracter de r0
+	@gravar em r1 um buffer auxiliar
+	mov	r10, r1
+	ldr	r1, =buffer_aux_padding_0
+	@volta a entrada para o caracter a ser impresso
+	@e trata proxima mascara
+	sub 	r0, r0, #1
+	bl	trata_mascaras
+	@no retorno, em r1 tem o buffer auxiliar já com o numero
+	ldr	r4, =buffer_aux_padding_0
+	sub	r5, r1, r4
+	@em r5 temos o tamanho do buffer armazenado em r1
+	sub	r5, r6, r5
+	@agora temos em r5 o numero de '0s' a imprimir na string de
+	@saida
+	mov	r1, r10
+_loop_padding0_zeros:
+	cmp	r5, #0
+	ble	_padding0_end
+	strb	r8, [r1], #1
+	sub	r5, r5, #1
+	b _loop_padding0_zeros
+_padding0_end:
+	@agora grava o numero que começa em r4
+	@e termina quando vier um caracter 0
+	ldrb	r5, [r4], #1
+	cmp	r5, #0
+	ldmeqfd sp!, {R4-R11, pc}
+	strb	r5, [r1], #1
+	b	_padding0_end
 	
-_trata_str:
-	ldr 	r3, [r2], #4
-_tr_str_loop:	
-	ldrb 	r4, [r3], #1
-	cmp 	r4, #0
-	moveq 	pc, lr
-	strb 	r4, [r1], #1
-	b 	_tr_str_loop
-
-	
-	
+trata_padding_m:
+	@é exatamente igual ao padding com 0, mas com ' '
+	@em r8 fica gravado o que colocar no padding
+	stmfd	sp!, {R4-R11, lr}
+	mov	r6, #0
+	mov	r7, #10
+	mov	r8, #' '
+	b	le_width_pad_0		
+trata_padding_p:
+	stmfd	sp!, {R4 - R11, lr}
+	@padding de +, se o numero é negativo otimo
+	@se é positivo imprimo um +
+	@usar um buffer auxiliar
+	mov	r10, r1
+	ldr	r1, =buffer_aux_padding_p
+	@tratar o proximo ponto
+	bl 	trata_mascaras
+	@ler em r4 o começo do buffer auxiliar
+	ldr 	r4, =buffer_aux_padding_p
+	@agora recuperar o buffer r1
+	mov	r1, r10
+	@ler em r5 o primeiro caracter
+	ldrb 	r5, [r4]
+	cmp	r5, #'-'
+	movne	r5, #'+'
+	strneb	r5, [r1], #1
+	@agora copiar o buffer de auxiliar para a saida
+_trata_padding_p_loop:
+	ldrb	r10, [r4], #1
+	cmp	r10, #0
+	beq	_tmpout
+	strb	r10, [r1], #1
+	b	_trata_padding_p_loop
+_tmpout:
+	ldmeqfd	sp!, {R4 - R11, pc}
 _trata_longs:
 	stmfd 	sp!, {R4-R12,lr}
 	@le que tipo de long tratar
@@ -270,5 +361,8 @@ buffer:
 	.skip 2000,0
 stack_init:
 	.word 0x0
-
+buffer_aux_padding_0:
+	.skip	100, 0
+buffer_aux_padding_p:
+	.skip	100, 0
 	

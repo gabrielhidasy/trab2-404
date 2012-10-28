@@ -22,31 +22,32 @@ _le_int:
 	@set the flag r8 for this
 	moveq	r8, #1
 	@and next char
-	add	r2, r2, #1
-_le_int_loop:	
+	addeq	r2, r2, #1
+_le_int_loop:
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
 	cmp	r0, #' '
-	b _le_int_loop_out
+	beq _le_int_loop_out
 	cmp	r0, #'\n'
-	b _le_int_loop_out
-	@next char
-	add	r2, r2, #1
-	@transforms in number
-	bl 	chartonumber
-	@if its less than zero or greater then F
-	@its not valid, error
-	cmp	r0, #0
-	blt	_myscanf_real_error
-	cmp	r0, #15
-	bgt	_myscanf_real_error
-	@else add it to accumulator
-	add 	r6, r6, r0
-	@multiply by 10
+	beq _le_int_loop_out
+	@multiply the acumulator *10
 	mov	r7, r6
 	mov	ip, #10
 	mul	r6, r7,	ip
+
+	@next char
+	add	r2, r2, #1
+	@transforms in number
+	sub	r0, r0, #48
+	@if its less than zero or greater then 9
+	@its not valid, error
+	cmp	r0, #0
+	blt	_myscanf_real_error
+	cmp	r0, #9
+	bgt	_myscanf_real_error
+	@else add it to accumulator
+	add 	r6, r6, r0
 	b 	_le_int_loop
 _le_int_loop_out:
 	cmp	r8, #0
@@ -70,7 +71,7 @@ _le_uint_loop:
 	streq	r6, [r5]
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	@transforms in number
-	bl 	chartonumber
+	sub	r0, r0, #48
 	@if its less than zero or greater then 9
 	@its not valid, error
 	cmp	r0, #0

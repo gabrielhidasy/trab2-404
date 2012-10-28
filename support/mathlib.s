@@ -4,8 +4,6 @@
 .type 	magic, %function
 .global longsub
 .type 	longsub, %function
-.global chartonumber
-.type 	chartonumber, %function
 .global long4lsl
 .type 	long4lsl, %function
 .global long4lsr
