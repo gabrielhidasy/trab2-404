@@ -77,6 +77,7 @@ _end:
 	mov	r1, r0
 	@e sair de volta para main
 	ldmfd sp!, {R4-R11, lr}
+	ldmfd sp!, {R4-R11, lr}
 	@desempilhar os registradores usados
 	ldmfd sp!, {R1-R3}
 	mov pc, lr
@@ -94,7 +95,7 @@ trata_mascaras:
 	ldrb 	r4, [r0], #1
 	stmfd	sp!, {r4}
 	cmp 	r4, #'c'
-	bleq 	_trata_char
+	@bleq 	_trata_char
 	ldmfd sp, {r4}
 	cmp	r4, #'c'
 	ldmeqfd	sp!, {r4}
@@ -108,7 +109,7 @@ trata_mascaras:
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'s'
-	bleq 	_trata_str
+	@bleq 	_trata_str
 	ldmfd sp, {r4}
 	cmp	r4, #'s'
 	ldmeqfd	sp!, {r4}
@@ -262,7 +263,7 @@ trata_padding_p:
 	cmp	r5, #'-'
 	movne	r5, #'+'
 	strneb	r5, [r1], #1
-	@agora copiar o buffer de auxiliar para a saida
+	@agora copiar o buffer auxiliar para a saida
 _trata_padding_p_loop:
 	ldrb	r10, [r4], #1
 	cmp	r10, #0
@@ -270,7 +271,7 @@ _trata_padding_p_loop:
 	strb	r10, [r1], #1
 	b	_trata_padding_p_loop
 _tmpout:
-	ldmeqfd	sp!, {R4 - R11, pc}
+	ldmfd	sp!, {R4 - R11, pc}
 _trata_longs:
 	stmfd 	sp!, {R4-R12,lr}
 	@le que tipo de long tratar

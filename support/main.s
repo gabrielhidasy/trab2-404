@@ -42,7 +42,7 @@ mystring:
 	.asciz	"%d"
 	.asciz	"garbage"
 mystring2:
-	.asciz 	"%+06d"
+	.asciz 	"%lld"
 
 	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
