@@ -234,11 +234,6 @@ _continua_padding_const:
 	@agora temos em r5 o numero de ' 's a imprimir na string de
 	@saida
 	mov	r1, r10
-	@ver se existe um - na frente do numero
-	ldrb	r9, [r4]
-	@caso seja um -, imprimir um -
-	cmp	r9, #'-'
-	streqb	r9, [r1], #1
 	@nesse ponto, imprimir o valor
 imprime_numero_padding_const:
 	
