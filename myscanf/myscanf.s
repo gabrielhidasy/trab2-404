@@ -147,8 +147,11 @@ _trata_mascaras_scanf:
 	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
-	cmp 	r4, #'h'
-	beq	_trata_short
+	cmp	r4, #'h'
+	bleq	_le_half
+	ldmfd 	sp, {r4}
+	cmp	r4, #'h'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 	@de um jeito ou de outro os argumentos
 	@são gravados em registradores ou em palavras
@@ -235,12 +238,31 @@ _le_long:
 
 	ldmfd	sp!, {R4}
 	ldmfd	sp!, {R4, pc}
-_trata_short:
-	@dar um valor parametro novo para a função
-	@escrever
+_le_half:
+	stmfd 	sp!, {R4-R11, lr}
+	ldrb	r4, [r3]
+	cmp	r4, #'d'
+	beq	 _le_half_int
+	cmp	r4, #'h'
+	beq	_le_half_half
+	ldmnefd	sp!, {R4-R11, pc}
+_le_half_int:
+	@salva r11 em r10
 	mov	r10, r11
-	
+	@carrega em r11 o buffer auxiliar
+	ldr	r11, =bufferh
+	@chama a função de tratar D
+	bl 	_le_int
+	@na volta, em r11 tem o numero gravado
+	ldr	r11, [r11]
+	strhs	r11, [r10], #4
+	mov	r11, r10
+	ldmfd	sp!, {R4-R11, pc}
 
+_le_half_half:
+	@essa função é compartilhada com a le half
+	@não salva na pilha, recupera da pilha da outra
+	ldmfd	sp!, {R4-R11, pc}
 .data
 error:	
 	.asciz "Deu pau\n"

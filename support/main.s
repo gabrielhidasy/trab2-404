@@ -23,7 +23,7 @@ main:
 	@ldr 	r3, =caracter3
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
-	ldr	r0, =mystring
+	ldr	r0, =mystring2
 	ldr	r1, =caracter1
 	ldr	r2, [r1]
 	ldr	r3, [r1, #4]
@@ -42,9 +42,9 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%lld %d"
+	.asciz	"%d %d"
 mystring2:
-	.asciz 	"a%+-6hhda, a%+03da, a%7da\n"
+	.asciz 	"a%+-6xa, a%+03ca, a%7da\n"
 
 	@@!!!!!!LEMBRAR DmE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
