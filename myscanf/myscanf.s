@@ -19,6 +19,7 @@ myscanf:
 	@r10 - numero de parametros lidos
 	stmfd 	sp!, {R4-R11, lr}
 	mov	r11, r1
+	sub	r11, r11, #4
 	mov 	r3, r0
 	ldr 	r2, =bufferin
 	@inicializa o contador de parametros lidos em 0
@@ -39,8 +40,10 @@ _myscanf_loop:
 	@compara string de formatação
 	@com caracter especial
 	cmp	r4, #'%'
+	addeq	r11, r11, #4
 	addeq 	r10, r10, #1
 	bleq 	_trata_mascaras_scanf
+	@proximo argumento
 	@se era caracter especial, o
 	@na volta o usuario já digitou
 	@voltar para o loop
@@ -205,7 +208,11 @@ _le_long:
 	ldmeqfd	sp!, {R4, pc}
 
 	ldmfd	sp!, {R4, pc}
-_trata_short:	
+_trata_short:
+	@dar um valor parametro novo para a função
+	@escrever
+	mov	r10, r11
+	
 
 .data
 error:	
@@ -214,4 +221,7 @@ nerror:
 	.asciz "Não deu erro"
 bufferin:
 	.skip 2000, 0
-	
+bufferh:
+	.word 0x0
+bufferhh:
+	.word 0x0

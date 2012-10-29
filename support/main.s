@@ -10,7 +10,7 @@ _start:
 main:
 	ldr	r0, =mystring
 	ldr	r1, =caracter1
-	@mov 	r2, #0x1
+	ldr 	r2, =caracter2
 	@mov 	r3, #0xE
 	@mov	r3, r3, lsl #28
 	@stmfd	sp!, {r1}
@@ -20,15 +20,15 @@ main:
 	@ldr 	r3, =caracter3
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
-	ldr	r0, =mystring2
+	ldr	r0, =mystring
 	ldr	r1, =caracter1
+	ldr	r2, =caracter2
+	@mov 	r1, #0xF000
+	@mov	r2, #0x22
+	@mov	r3, #-44
 	ldr	r1, [r1]
-	mov 	r1, #0xF000
-	mov	r2, #0x22
-	mov	r3, #-44
-	@ldrb	r1, [r1]
 	@ldr 	r2, =caracter2
-	@ldrb 	r2, [r2]
+	ldr 	r2, [r2]
 	@ldr 	r3, =caracter4
 	@ldrb	r3, [r3]
 	@stmfd	sp!, {r3}
@@ -42,7 +42,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%d"
+	.asciz	"%x %x"
 mystring2:
 	.asciz 	"a%+-6hhda, a%+03da, a%7da\n"
 

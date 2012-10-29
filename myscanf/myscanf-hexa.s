@@ -13,9 +13,11 @@ _le_hexa_loop:
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
 	cmp	r0, #' '
+	moveq	r6, r6, lsr #4
 	streq	r6, [r5]
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	cmp	r0, #'\n'
+	moveq	r6, r6, lsr #4
 	streq	r6, [r5]
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	@next char
@@ -33,6 +35,7 @@ _le_hexa_loop:
 	@else add it to accumulator
 	add 	r6, r6, r0
 	@and do the 4 - bitshift to left
+	@on acumulator
 	mov	r6, r6, lsl #4
 	b 	_le_hexa_loop
 _le_lhexa:
