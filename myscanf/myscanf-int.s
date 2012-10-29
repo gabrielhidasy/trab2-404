@@ -101,13 +101,9 @@ _le_luint_loop:
 	@if its an space or \n its the end
 	@------------------------------------
 	cmp	r4, #' '
-	streq	r0, [r5], #1
-	streq	r1, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
+	beq	_le_uint_loop_out
 	cmp	r4, #'\n'
-	streq	r0, [r5], #1
-	streq	r1, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
+	beq	_le_uint_loop_out
 	@-----------------------------------
 	@transforms in number
 	sub	r4, r4, #48
@@ -122,6 +118,11 @@ _le_luint_loop:
 	@and multiply by 10
 	bl 	mult6410
 	b 	_le_luint_loop
+_le_uint_loop_out:
+	str	r0, [r5], #1
+	str	r1, [r5]
+	ldmfd 	sp!, {R4 - R11, pc}
+
 _le_lint:
 	stmfd	sp!, {r4-r11, lr}
 	@first get the first char, if its an - then set an flag (r8)

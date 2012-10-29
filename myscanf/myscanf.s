@@ -160,6 +160,7 @@ _trata_mascaras_scanf:
 
 _le_long_long:
 	@ler o proximo caracter para definir
+	ldrb	r4, [r3], #1
 	@tipo de long long a ser lido
 	stmfd 	sp!, {R4, lr}
 	stmfd	sp!, {R4}

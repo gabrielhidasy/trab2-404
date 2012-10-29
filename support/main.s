@@ -10,10 +10,10 @@ _start:
 main:
 	ldr	r0, =mystring
 	ldr	r1, =caracter1
-	ldr 	r2, =caracter2
-	ldr 	r3, =caracter4
-	stmfd	sp!, {r3}
-	ldr 	r3, =caracter3
+	@ldr 	r2, =caracter2
+	@ldr 	r3, =caracter4
+	@stmfd	sp!, {r3}
+	@ldr 	r3, =caracter3
 	
 	@mov	r3, r3, lsl #28
 	@stmfd	sp!, {r1}
@@ -23,7 +23,7 @@ main:
 	@ldr 	r3, =caracter3
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
-	ldr	r0, =mystring2
+	ldr	r0, =mystring
 	ldr	r1, =caracter1
 	ldr	r2, [r1]
 	ldr	r3, [r1, #4]
@@ -32,7 +32,7 @@ main:
 	@mov	r2, #0x22
 	@mov	r3, #-44
 	@ldr 	r2, =caracter2
-	stmfd	sp!, {R3}
+	@stmfd	sp!, {R3}
 	@stmfd	sp!, {r3}
 	bl 	myprintf
 __mainend:
@@ -42,7 +42,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%d %d"
+	.asciz	"%lld"
 mystring2:
 	.asciz 	"a%+-6xa, a%+03ca, a%7da\n"
 
@@ -50,9 +50,9 @@ mystring2:
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
 
 caracter1:
-	.word 0xba
+	.word 0x0
 caracter2:
-	.word 0xba
+	.word 0x0
 caracter3:
 	.word 0xca
 caracter4:

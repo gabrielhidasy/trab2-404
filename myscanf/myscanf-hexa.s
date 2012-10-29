@@ -51,18 +51,15 @@ _le_lhexa_loop:
         @---------------------------------------
 	@if its an space or \n its the end
 	cmp	r4, #' '
-	streq	r1, [r5], #1
-	streq	r0, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
-	cmp	r4, #'\n
-	streq	r1, [r5], #1
-	streq	r0, [r5]
+	beq	_le_lhexa_loop_out
+	cmp	r4, #'\n'
+	beq	_le_lhexa_loop_out
 	@--------------------------------------
 	@next char
 	add 	r2, r2, #1
 	@transforms in number
 	sub	r4, r4, #48
-	cmp 	r4, #'9'
+	cmp 	r4, #9
 	subgt	r4, #39
 	@if its less than zero or greater then F
 	@its not valid, error
@@ -75,3 +72,7 @@ _le_lhexa_loop:
 	@and do the 4 - bitshift to left
 	bl 	long4lsl
 	b 	_le_lhexa_loop
+_le_lhexa_loop_out:	
+	streq	r0, [r5], #4
+	streq	r1, [r5]
+	ldmeqfd sp!, {R4 - R11, pc}

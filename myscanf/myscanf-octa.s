@@ -47,13 +47,12 @@ _le_locta_loop:
         @---------------------------------------
 	@if its an space or \n its the end
 	cmp	r4, #' '
-	streq	r1, [r5], #1
-	streq	r0, [r5]
-	ldmeqfd 	sp!, {R4 - R11, pc}
+	beq	_le_octa_loop_end
 	cmp	r4, #'\n
-	streq	r1, [r5], #1
-	streq	r0, [r5]
+	beq	_le_octa_loop_end
 	@--------------------------------------
+	@and do the 3 - bitshift to left
+	bl 	long3lsl
 	@next char
 	add 	r2, r2, #1
 	@transforms in number
@@ -66,6 +65,9 @@ _le_locta_loop:
 	bgt	_myscanf_real_error
 	@else add it to accumulator
 	add 	r0, r0, r4
-	@and do the 3 - bitshift to left
-	bl 	long3lsl
 	b 	_le_locta_loop
+	
+_le_octa_loop_end:
+	str	r0, [r5], #4
+	str	r1, [r5]
+	ldmfd 	sp!, {R4 - R11, pc}
