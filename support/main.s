@@ -6,12 +6,12 @@
 @sem _start na raspberry pi ao separar o arquivo em diretorios
 @o programa se iniciava pela myprintf-hexa.s, não dava certo
 @com ele não compila do simulador
-_start:	
+@_start:	
 main:
 	ldr	r0, =mystring
 	ldr	r1, =caracter1
 	ldr 	r2, =caracter2
-	@mov 	r3, #0xE
+	mov 	r3, #0xE
 	@mov	r3, r3, lsl #28
 	@stmfd	sp!, {r1}
 	@mov	r3, #0
@@ -20,7 +20,7 @@ main:
 	@ldr 	r3, =caracter3
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
-	ldr	r0, =mystring
+	ldr	r0, =mystring2
 	ldr	r1, =caracter1
 	ldr	r2, =caracter2
 	@mov 	r1, #0xF000
@@ -42,7 +42,7 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%x %x"
+	.asciz	"%d %d"
 mystring2:
 	.asciz 	"a%+-6hhda, a%+03da, a%7da\n"
 

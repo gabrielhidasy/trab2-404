@@ -8,7 +8,7 @@ _le_octa:
 	ldr	r5, [r11], #4
 	@acummulator = r6 = 0
 	mov 	r6, #0
-_le_octa_loop:	
+_le_octa_loop:		
 	@get character from input buffer
 	ldrb	r0, [r2]
 	@if its an space or \n its the end
@@ -19,7 +19,8 @@ _le_octa_loop:
 	streq	r6, [r5]
 	ldmeqfd 	sp!, {R4 - R11, pc}
 	@next char
-	add	r2, r2, #1
+	add	r2, r2, #1	
+	mov	r6, r6, lsl #3
 	@transforms in number
 	sub	r0, r0, #48
 	@if its less than zero or greater then 7
@@ -31,7 +32,7 @@ _le_octa_loop:
 	@else add it to accumulator
 	add 	r6, r6, r0
 	@and do the 3 - bitshift to left
-	mov	r6, r6, lsl #3
+
 	b 	_le_octa_loop
 _le_locta:
 	stmfd	sp!, {R4-R11, lr}

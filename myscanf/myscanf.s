@@ -7,6 +7,11 @@ myscanf:
 	@coisas que virão da entrada padrão
 	@primeira coisa a fazer, empilhar os 3 endereços
 	@restantes
+	@stackinit e lr init serao usados para funcoes de erro
+	ldr 	ip, =stackinit
+	str	sp, [ip]
+	ldr	ip, =lrinit
+	str	lr, [ip]
 	stmfd sp!, {r3}
 	stmfd sp!, {r2}
 	stmfd sp!, {r1}
@@ -80,9 +85,10 @@ _myscanf_real_error:
 	ldr r0, =error
 	bl myprintf
 	@limpa a pilha e sai em caso de erro
-	ldmfd sp!, {R4-R11, lr}
-	ldmfd sp!, {R1-R3}
-	mov pc, lr
+	ldr	sp, =stackinit
+	ldr	sp, [sp]
+	ldr	lr, =lrinit
+	ldr	pc, [lr]
 
 _trata_mascaras_scanf:
 	@salvar registradores na pilha
@@ -224,4 +230,8 @@ bufferin:
 bufferh:
 	.word 0x0
 bufferhh:
+	.word 0x0
+stackinit:
+	.word 0x0
+lrinit:
 	.word 0x0
