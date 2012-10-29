@@ -44,11 +44,11 @@ __mainend:
 mystring:
 	.asciz	"%d"
 mystring2:
-	.asciz 	"a%+-2da, a%+03da, a%07da\n"
+	.asciz 	"a%+-6hhda, a%+03da, a%7da\n"
 
 	@@!!!!!!LEMBRAR DmE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
-	@@tá tratando tudo como unsigned
+
 caracter1:
 	.word 0xba
 caracter2:

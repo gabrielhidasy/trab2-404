@@ -116,6 +116,13 @@ trata_mascaras:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
+	cmp 	r4, #'i'
+	bleq 	_trata_int
+	ldmfd sp, {r4}
+	cmp	r4, #'i'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+	
 	cmp 	r4, #'s'
 	bleq 	_trata_str
 	ldmfd sp, {r4}
@@ -150,12 +157,10 @@ trata_mascaras:
 	cmp	r4, #'u'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
-	
-	@half trata como normal
+
+	@ta errado, h tem que tratar o proximo diferente
 	cmp 	r4, #'h'
-	bleq	trata_mascaras
-	ldmfd sp, {r4}
-	cmp	r4, #'h'	
+	bleq	_trata_h
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
@@ -190,6 +195,22 @@ trata_mascaras:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	mov 	pc, lr
+
+_trata_h:
+	ldrb	r4, [r0, #1]
+	cmp	r4, #'h'
+	beq 	_trata_hh
+	ldrb	r4, [r0, #1]
+	cmp	r4, #'d'
+	ldreqsh	r5, [r2]
+	streq	r5, [r2]
+	b	trata_mascaras
+_trata_hh:
+	ldrb	r4, [r0, #2]
+	cmp	r4, #'d'
+	ldreqsb	r5, [r2]
+	streq	r5, [r2]
+	b	trata_mascaras
 	
 trata_padding_const:
 	mov	r8, #' '
