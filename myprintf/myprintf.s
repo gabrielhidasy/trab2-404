@@ -158,9 +158,11 @@ trata_mascaras:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
-	@ta errado, h tem que tratar o proximo diferente
 	cmp 	r4, #'h'
+	@beq 	trata_mascaras
 	bleq	_trata_h
+	ldmfd 	sp, {R4}
+	cmp	r4, #'h'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
@@ -195,21 +197,47 @@ trata_mascaras:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	mov 	pc, lr
-
+	
+_trata_hd:
+	ldr	r4, [r2]
+	and	r5, r4, #0x8000
+	cmp	r5, #0
+	rsbne	r4, r4, #0
+	str	r4, [r2]
+	bl 	_trata_int
+	ldmfd	sp!, {r4}
+	ldmfd sp!, {R4-R12, pc}
 _trata_h:
-	ldrb	r4, [r0, #1]
-	cmp	r4, #'h'
-	beq 	_trata_hh
-	ldrb	r4, [r0, #1]
+	stmfd	sp!, {R4-R12, lr}
+	@le o tipo de halfword
+	ldrb	r4, [r0], #1
+	stmfd	sp!, {r4}
+	
 	cmp	r4, #'d'
-	ldreqsh	r5, [r2]
-	streq	r5, [r2]
-	b	trata_mascaras
+	@se o bit n 15 for 1, rsb
+	@o parametro bem em R2
+	beq 	_trata_hd
+
+	cmp	r4, #'u'
+	bleq 	_trata_int
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp	r4, #'x'
+	bleq	_trata_hex_short
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp	r4, #'o'
+	bleq	_trata_oct_short
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
 _trata_hh:
 	ldrb	r4, [r0, #2]
 	cmp	r4, #'d'
+	add	r0, r0, #1
 	ldreqsb	r5, [r2]
-	streq	r5, [r2]
+	streqb	r5, [r2]
 	b	trata_mascaras
 	
 trata_padding_const:
@@ -525,7 +553,7 @@ _trata_long_longs:
 
 	cmp	r4, #'d'
 	bleq	_trata_lint
-	ldmfd sp, {r4}
+	ldmfd 	sp, {r4}
 	cmp	r4, #'d'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
@@ -535,11 +563,11 @@ myprintf_error:
 	@limpa pilha
 	ldr	sp, =stack_init
 	ldr	sp, [sp]
-	ldmfd sp!, {R4-R11, lr}
+	ldmfd 	sp!, {R4-R11, lr}
 	@desempilhar os registradores usados
-	ldmfd sp!, {R1-R3}
+	ldmfd 	sp!, {R1-R3}
 	mov	r0, #-1
-	mov pc, lr
+	mov 	pc, lr
 
 .data
 buffer:

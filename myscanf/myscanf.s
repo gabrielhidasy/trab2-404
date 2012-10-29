@@ -241,7 +241,7 @@ _le_long:
 	ldmfd	sp!, {R4, pc}
 _le_half:
 	stmfd 	sp!, {R4-R11, lr}
-	ldrb	r4, [r3]
+	ldrb	r4, [r3], #1
 	cmp	r4, #'d'
 	beq	 _le_half_int
 	cmp	r4, #'h'
@@ -252,12 +252,20 @@ _le_half_int:
 	mov	r10, r11
 	@carrega em r11 o buffer auxiliar
 	ldr	r11, =bufferh
+	ldr	r9, =bufferh2
+	str	r9, [r11]
 	@chama a função de tratar D
 	bl 	_le_int
 	@na volta, em r11 tem o numero gravado
 	ldr	r11, [r11]
-	strhs	r11, [r10], #4
+	ldr	r11, [r11]
+	mov	r8, r11
 	mov	r11, r10
+	@agora ler do buffer rm r11 o parametro
+	ldr	r10, [r11], #4
+	@e salvar o resultado
+	strh 	r8, [r10]
+	ldrsh	r8, [r10]
 	ldmfd	sp!, {R4-R11, pc}
 
 _le_half_half:
@@ -272,6 +280,8 @@ nerror:
 bufferin:
 	.skip 2000, 0
 bufferh:
+	.word 0x0
+bufferh2:
 	.word 0x0
 bufferhh:
 	.word 0x0

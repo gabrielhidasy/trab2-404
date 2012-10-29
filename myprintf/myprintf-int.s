@@ -29,7 +29,7 @@ _trata_lint:
 	@agora negai sua origem
 	ldr 	r5, [r2, #4]
 	ldr 	r4, [r2]
-	rsb		r4, r4, #0
+	rsb	r4, r4, #0
 	rsb   	r5, r5, #0
 	sub 	r5, r5, #1
 	@como é um numero de 64 bits só
@@ -80,7 +80,7 @@ _pre_trata_luint:
 _trata_carry:
 	@carrega em r10 o buffer original de inteiros
 	ldr 	r10, =auxbufferints
-	@coloca em r10 o tamanho da string final
+	@coloca em r7 o tamanho da string final
 	sub	r7, r1, r10
 	mov 	r8, #0
 _loop_t_carry:
@@ -102,12 +102,14 @@ _loop_t_carry:
 	sub	r7, r7, #1
 	b	_loop_t_carry 	
 	@volta o buffer certo para a saida
-	@agora como r1 tem o valor correto, gravar ele no buffer de saida
 _loop_int_final:
 	cmp 	r8, #1
 	moveq	r8, #49
 	addeq	r1, r1, #1
 	streqb	r8, [r4], #1
+	cmp	r8, #0
+	subeq	r4, r4, #1
+	moveq	r8, #49
 	ldrb	r9, [r1], #1
 	cmp	r9, #0
 	moveq 	r1, r4

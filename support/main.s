@@ -24,13 +24,14 @@ main:
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
 	ldr	r0, =mystring2
-	ldr	r1, =caracter1
-	ldr	r2, [r1]
-	ldr	r3, [r1, #4]
-	mov	r1, #0
+	@ldr	r1, =caracter1
+	@ldr	r1, [r1]
+	@ldr	r3, [r1, #4]
+	@mov	r1, #0
 	@mov 	r1, #0xF000
-	@mov	r2, #0x22
-	@mov	r3, #-44
+	mov	r2, #0x30
+	mov	r3, #0xF
+	mov	r3, r3, lsl #28
 	@ldr 	r2, =caracter2
 	@stmfd	sp!, {R3}
 	@stmfd	sp!, {r3}
@@ -42,11 +43,11 @@ __mainend:
 	.data
 	.align	4
 mystring:
-	.asciz	"%lld"
+	.asciz	"%d\n"
 mystring2:
-	.asciz 	"%0400lld"
+	.asciz 	"%llu"
 
-	@@!!!!!!LEMBRAR DmE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
+	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
 
 caracter1:
