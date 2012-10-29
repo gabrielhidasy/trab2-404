@@ -138,6 +138,9 @@ _le_lint:
 	@and next char
 	addeq	r2, r2, #1
 	@now repeat the _le_luint_loop
+	 @acumularor r1:r0
+	 mov	r1, #0
+	 mov 	r0, #0
 _le_lint_loop:	
 	@get character from input buffer
 	ldrb	r4, [r2], #1
@@ -148,6 +151,8 @@ _le_lint_loop:
 	cmp	r4, #'\n'
 	beq	_le_lint_loop_out
 	@-----------------------------------
+	@and multiply by 10 the accumulator
+	bl 	mult6410
 	@transforms in number
 	sub	r4, r4, #48
 	@if its less than zero or greater then 9
@@ -158,8 +163,6 @@ _le_lint_loop:
 	bgt	_myscanf_real_error
 	@else add it to accumulator
 	add 	r0, r0, r4
-	@and multiply by 10
-	bl 	mult6410
 	b 	_le_lint_loop
 _le_lint_loop_out:
 	@invert the number, if needed
