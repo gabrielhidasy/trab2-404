@@ -9,6 +9,8 @@
 myprintf:
 	@empilha r1, r2 e r3 para uniformizar o uso do programa
 	@(ler todos os parametros da pilha)
+	ldr	ip, =lr_point
+	str	lr, [ip]
 	stmfd sp!, {r3}
 	stmfd sp!, {r2}
 	stmfd sp!, {r1} 
@@ -17,8 +19,8 @@ myprintf:
 	stmfd sp!, {r4-r11, lr}
 	mov 	fp, ip
 	@grava o valor inicial da pilha na  memoria
-	ldr	ip, =stack_init
-	str	sp, [ip]
+	ldr	r2, =stack_init
+	str	sp, [r2]
 	mov 	r1, #0
 	@em r2 fica o endereço do parametro atual
 	mov 	r2, sp
@@ -75,14 +77,20 @@ _end:
 	@mov r1, r5 
 	bl syscallw
 	mov	r1, r0
-	@e sair de volta para main
-	ldmfd sp!, {R4-R11, lr}
-	ldmfd sp!, {R4-R11, lr}
+	@ldr	sp, =stack_init
+	@ldr	sp, [sp]
+	@ldmfd sp!, {R4-R11, lr}
+	ldmfd sp!, {R4- R11,lr}
 	@desempilhar os registradores usados
-	ldmfd sp!, {R1-R3}
+	ldmfd	sp!, {R3}
+	ldmfd	sp!, {R2}
+	ldmfd	sp!, {R1}
+	@bugs demais aqui, a pilha parece
+	@certa mas sempre da erro, desisto por hj
+	ldr	lr, =lr_point
+	ldr	pc, [lr]
 	mov pc, lr
 
-	
 trata_mascaras:
 	stmfd 	sp!, {R4-R12, lr}
 	add 	fp, sp, #36
@@ -170,15 +178,70 @@ trata_mascaras:
 	@flag de padding -
 	cmp 	r4, #'-'
 	bleq	trata_padding_m
-	cmp	r4, #'-'
 	ldmfd 	sp, {r4}
+	cmp	r4, #'-'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	@se não for nada disso é a constante maior que 0
-	
+	@e o comportamento é como o do -, mas com os esp
+	@do outro lado
+	bleq	trata_padding_const
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
 	mov 	pc, lr
-
+	
+trata_padding_const:
+	mov	r8, #' '
+	@quando se recebe uma constante, é preciso ler
+	@o valor da constante
+	@para isso ler ele em um buffer auxiliar,
+	@assumindo que ele é um inteiro de base 10
+	stmfd	sp!, {R4-R11, lr}
+	mov	r6, #0
+	mov	r7, #10
+	@-----------------------------------------
+	@le o numero a frente
+le_width_pad_const:	
+	ldrb 	r5, [r0], #1
+	@assumindo que tem que ser um numero
+	sub 	r5, r5, #48
+	@assim ele cai no espaço de 0 a 9
+	cmp	r5, #9
+	bgt	_continua_padding_const
+	cmp	r5, #0
+	blt	_continua_padding_const
+	@multiplicar o contador por 10
+	mul	r6, r7, r6
+	@somar o numero no contador
+	add	r6, r6, r5
+	b 	le_width_pad_const
+_continua_padding_const:	
+	@nesse ponto tem o valor da width em r6 e
+	@o tipo a tratar é o proximo caracter de r0
+	@gravar em r1 um buffer auxiliar
+	mov	r10, r1
+	ldr	r1, =buffer_aux_padding_const
+	@volta a entrada para o caracter a ser impresso
+	@e trata proxima mascara
+	sub 	r0, r0, #1
+	bl	trata_mascaras
+	@no retorno, em r1 tem o buffer auxiliar já com o numero
+	ldr	r4, =buffer_aux_padding_const
+	sub	r5, r1, r4
+	@em r5 temos o tamanho do buffer armazenado em r1
+	sub	r5, r6, r5
+	@agora temos em r5 o numero de ' 's a imprimir na string de
+	@saida
+	mov	r1, r10
+	@ver se existe um - na frente do numero
+	ldrb	r9, [r4]
+	@caso seja um -, imprimir um -
+	cmp	r9, #'-'
+	streqb	r9, [r1], #1
+	@nesse ponto, imprimir o valor
+imprime_numero_padding_const:
+	
 trata_padding_0:
 	mov	r8, #'0'
 	@quando se recebe o 0, é preciso ler
@@ -222,6 +285,11 @@ _continua_padding_0:
 	@agora temos em r5 o numero de '0s' a imprimir na string de
 	@saida
 	mov	r1, r10
+	@ver se existe um - na frente do numero
+	ldrb	r9, [r4]
+	@caso seja um -, imprimir um -
+	cmp	r9, #'-'
+	streqb	r9, [r1], #1
 _loop_padding0_zeros:
 	cmp	r5, #0
 	ble	_padding0_end
@@ -234,6 +302,8 @@ _padding0_end:
 	ldrb	r5, [r4], #1
 	cmp	r5, #0
 	ldmeqfd sp!, {R4-R11, pc}
+	cmp	r5, #'-'
+	moveq	r5, #'0'
 	strb	r5, [r1], #1
 	b	_padding0_end
 	
@@ -360,10 +430,12 @@ myprintf_error:
 .data
 buffer:
 	.skip 2000,0
+.align 4
 stack_init:
 	.word 0x0
 buffer_aux_padding_0:
 	.skip	100, 0
 buffer_aux_padding_p:
 	.skip	100, 0
-	
+lr_point:
+	.word 0x0

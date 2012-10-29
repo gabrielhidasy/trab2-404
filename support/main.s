@@ -18,11 +18,14 @@ main:
 	@stmfd	sp!, {r2}
 	@stmfd	sp!, {r3}
 	@ldr 	r3, =caracter3
-	bl	myscanf
+	@bl	myscanf
 	@ldmfd 	sp!, {r3}
 	ldr	r0, =mystring2
 	ldr	r1, =caracter1
 	ldr	r1, [r1]
+	mov 	r1, #-34
+	mov	r2, #22
+	mov	r3, #33
 	@ldrb	r1, [r1]
 	@ldr 	r2, =caracter2
 	@ldrb 	r2, [r2]
@@ -40,9 +43,8 @@ __mainend:
 	.align	4
 mystring:
 	.asciz	"%d"
-	.asciz	"garbage"
 mystring2:
-	.asciz 	"%lld"
+	.asciz 	"%+04d"
 
 	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
