@@ -11,7 +11,7 @@ _trata_oct_long:
 	@r2 e r2+4 ou r2+4 e r2+8
 	and 	r3, r2, #7
 	cmp 	r3, #0
-	addeq	r2, r2, #4
+	addne	r2, r2, #4
 	@r2 tem o endereço do parametro
 	ldr	r0, [r2], #4
 	ldr	r1, [r2], #4

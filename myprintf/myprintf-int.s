@@ -14,7 +14,7 @@ _trata_lint:
 	@o problema do r2
 	and 	r4, r2, #7
 	cmp	r4, #0
-	addeq	r2, r2, #4
+	addne	r2, r2, #4
 	ldr 	r4, [r2, #4]
 	mov 	r4, r4, lsr #31
 	@se o resultado é 0, basta imprimir
@@ -254,7 +254,7 @@ _trata_int:
 	@agora negai sua origem
 	rsb	r5, r5, #0
 	@em r5 tem o inteiro negado
-	sub	r2, r2, #4
+	@sub	r2, r2, #4
 	str 	r5, [r2]
 	bl	_trata_uint
 	ldmfd	sp!, {R4-R11, pc}

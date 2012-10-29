@@ -18,14 +18,14 @@ main:
 	@stmfd	sp!, {r2}
 	@stmfd	sp!, {r3}
 	@ldr 	r3, =caracter3
-	@bl	myscanf
+	bl	myscanf
 	@ldmfd 	sp!, {r3}
 	ldr	r0, =mystring2
 	ldr	r1, =caracter1
 	ldr	r1, [r1]
-	mov 	r1, #-34
-	mov	r2, #22
-	mov	r3, #33
+	mov 	r1, #0xF000
+	mov	r2, #0x22
+	mov	r3, #-44
 	@ldrb	r1, [r1]
 	@ldr 	r2, =caracter2
 	@ldrb 	r2, [r2]
@@ -44,9 +44,9 @@ __mainend:
 mystring:
 	.asciz	"%d"
 mystring2:
-	.asciz 	"%+04d"
+	.asciz 	"a%+-2da, a%+03da, a%07da\n"
 
-	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
+	@@!!!!!!LEMBRAR DmE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
 	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
 	@@tá tratando tudo como unsigned
 caracter1:
