@@ -139,7 +139,7 @@ _le_lint:
 	@now repeat the _le_luint_loop
 _le_lint_loop:	
 	@get character from input buffer
-	ldrb	r4, [r2]
+	ldrb	r4, [r2], #1
 	@if its an space or \n its the end
 	@------------------------------------
 	cmp	r4, #' '
@@ -170,7 +170,7 @@ _le_lint_loop_out:
 	rsbne	r0, r0, #0
 	rsbne	r1, r1, #0
 	addne	r1, r1, #1
-	str	r0, [r5], #1
+	str	r0, [r5], #4
 	str	r1, [r5]
 	ldmfd sp!, {R4 - R11, pc}
 

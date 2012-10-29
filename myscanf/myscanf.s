@@ -96,45 +96,55 @@ _trata_mascaras_scanf:
 	@ler o proximo caracter da string de
 	@controle para definir o que ler
 	ldrb	r4, [r3], #1
+	stmfd	sp!, {r4}
+	
 	cmp 	r4, #'d'
 	bleq	_le_int
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'d'
+	ldmfd 	sp, {r4}
+	cmp	r4, #'d'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 	
 	cmp 	r4, #'x'
 	bleq	_le_hexa
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'x'	
+	ldmfd 	sp, {r4}
+	cmp	r4, #'x'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 	
 	cmp 	r4, #'o'
 	bleq	_le_octa
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'o'
+	ldmfd 	sp, {r4}
+	cmp	r4, #'o'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
 	cmp 	r4, #'u'
 	bleq	_le_uint
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'u'
+	ldmfd 	sp, {r4}
+	cmp	r4, #'u'
+	ldmeqfd	sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
 	cmp 	r4, #'c'
 	bleq	_le_caracter
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'c'
+	ldmfd 	sp, {r4}
+	cmp	r4, #'c'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
 	cmp	r4, #'s'
 	bleq	_le_string
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'s'
+	ldmfd 	sp, {r4}
+	cmp	r4, #'s'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
 	cmp	r4, #'l'
 	bleq	_le_long
-
+	ldmfd 	sp, {r4}
+	cmp	r4, #'l'
+	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 
 	cmp 	r4, #'h'
@@ -149,30 +159,34 @@ _le_long_long:
 	@ler o proximo caracter para definir
 	@tipo de long long a ser lido
 	stmfd 	sp!, {R4, lr}
-	ldrb	r4, [r3], #1
+	stmfd	sp!, {R4}
 
 	cmp 	r4, #'d'
 	bleq	_le_lint
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'d'
+	ldmfd	sp, {R4}
+	cmp	r4, #'d'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 	
 	cmp 	r4, #'x'
 	bleq	_le_lhexa
-	ldrb	r4, [r3, #-1]
+	ldmfd	sp, {R4}
 	cmp		r4, #'x'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 	
 	cmp 	r4, #'o'
 	bleq	_le_locta
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'o'
+	ldmfd	sp, {R4}
+	cmp	r4, #'o'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	cmp 	r4, #'u'
 	bleq	_le_luint
-	ldrb	r4, [r3, #-1]
-	cmp		r4, #'u'
+	ldmfd	sp, {R4}
+	cmp	r4, #'u'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	ldmeqfd	sp!, {R4, pc}
@@ -182,37 +196,44 @@ _le_long:
 	@longs comuns são iguais a inteiros
 	stmfd 	sp!, {R4, lr}
 	ldrb	r4, [r3], #1
+	stmfd	sp!, {R4}
 	
 	cmp 	r4, #'d'
 	bleq	_le_int
-	ldrb	r4, [r3, #-1]
+	ldmfd	sp, {R4}
 	cmp 	r4, #'d'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	cmp 	r4, #'x'
 	bleq	_le_hexa
-	ldrb	r4, [r3, #-1]
+	ldmfd	sp, {R4}
 	cmp 	r4, #'x'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	cmp 	r4, #'o'
 	bleq	_le_octa
-	ldrb	r4, [r3, #-1]
+	ldmfd	sp, {R4}
 	cmp 	r4, #'o'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	cmp 	r4, #'u'
 	bleq	_le_uint
-	ldrb	r4, [r3, #-1]	
+	ldmfd	sp, {R4}	
 	cmp 	r4, #'u'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
 	cmp	r4, #'l'
 	bleq	_le_long_long
-	ldrb	r4, [r3, #-1]
+	ldmfd	sp, {R4}
 	cmp 	r4, #'l'
+	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
+	ldmfd	sp!, {R4}
 	ldmfd	sp!, {R4, pc}
 _trata_short:
 	@dar um valor parametro novo para a função

@@ -130,20 +130,20 @@ chartonumber:
 	subgt	r0, r0, #39
 mult6410:
 	@multiply an 64 bits number in r1:r0 * 10
-	stmfd 	sp!, {r4-r6, lr}
+	stmfd 	sp!, {r6-r9, lr}
 	@first multiply the bigger part for 10
 	mov 	r6, #10
 	mul	r1, r6, r1
 	@now an long multiplication in the least
 	@significant part
-	umull	r4, r5, r0, r6
+	umull	r9, r7, r0, r6
 	@mov the least significant of them (r4)
 	@to the awser less significative
-	mov	r0, r4
+	mov	r0, r9
 	@and add the most significatives (r1, r5)
-	add	r1, r1, r5
+	add	r1, r1, r7
 	@the awser is in R1:R0
-	ldmfd sp!, {r4-r6, pc}
+	ldmfd sp!, {r6-r9, pc}
 .data
 magicconstant:
 	.int 858993460
