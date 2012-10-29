@@ -82,8 +82,6 @@ _myscanf_error:
 	@formato para o caracter a ser lido
 _myscanf_real_error:	
 	mov	r0, #-1
-	ldr r0, =error
-	bl myprintf
 	@limpa a pilha e sai em caso de erro
 	ldr	sp, =stackinit
 	ldr	sp, [sp]
@@ -273,10 +271,6 @@ _le_half_half:
 	@não salva na pilha, recupera da pilha da outra
 	ldmfd	sp!, {R4-R11, pc}
 .data
-error:	
-	.asciz "Deu pau\n"
-nerror:
-	.asciz "Não deu erro"
 bufferin:
 	.skip 2000, 0
 bufferh:

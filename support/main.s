@@ -9,7 +9,7 @@
 _start:	
 main:
 	ldr	r0, =mystring
-	ldr	r1, =caracter1
+	ldr	r1, =caracter4
 	@ldr 	r2, =caracter2
 	@ldr 	r3, =caracter4
 	@stmfd	sp!, {r3}
@@ -32,7 +32,8 @@ main:
 	mov	r2, #0x30
 	mov	r3, #0xF
 	mov	r3, r3, lsl #28
-	@ldr 	r2, =caracter2
+	ldr 	r1, =caracter4
+	@ldr	r1, [r1]
 	@stmfd	sp!, {R3}
 	@stmfd	sp!, {r3}
 	bl 	myprintf
@@ -40,15 +41,13 @@ __mainend:
 	mov	r7, #1
 	svc	0
 
-	.data
+.data
 	.align	4
 mystring:
-	.asciz	"%d\n"
+	.asciz	"%s"
 mystring2:
-	.asciz 	"%llu"
+	.asciz 	"Olha minha string %s\n"
 
-	@@!!!!!!LEMBRAR DE ZERAR BUFFER AUXILIAR DEPOIS DE USAR
-	@@!!TRATAR CASO DO FALSO LONG QUE DEGENERA PRA SÓ USAR AS F DE NORMAL
 
 caracter1:
 	.word 0x0
@@ -57,5 +56,5 @@ caracter2:
 caracter3:
 	.word 0xca
 caracter4:
-	.word 0x11
+	.skip 2000, 0
 	
