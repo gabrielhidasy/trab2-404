@@ -103,7 +103,7 @@ trata_mascaras:
 	ldrb 	r4, [r0], #1
 	stmfd	sp!, {r4}
 	cmp 	r4, #'c'
-	@bleq 	_trata_char
+	bleq 	_trata_char
 	ldmfd sp, {r4}
 	cmp	r4, #'c'
 	ldmeqfd	sp!, {r4}
@@ -117,7 +117,7 @@ trata_mascaras:
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'s'
-	@bleq 	_trata_str
+	bleq 	_trata_str
 	ldmfd sp, {r4}
 	cmp	r4, #'s'
 	ldmeqfd	sp!, {r4}
