@@ -40,6 +40,10 @@ endif
 
 gdb-host: link
 	arm-sim --load=prog -cycles=10000 -enable-gdb -gdb-port=5928 -debug-core
-zip:
-	zip megazip *
+megazip:
+	@rm megazip.zip
+	@zip -r megazip.zip *
+make zip:
+	@rm code.zip
+	@zip code.zip */*.s
 
