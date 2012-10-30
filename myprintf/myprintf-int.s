@@ -100,6 +100,8 @@ _loop_t_carry:
 	strb 	r9, [r1], #-1
 	@ve se chegou no inicio do buffer
 	sub	r7, r7, #1
+	@cmp	r7, #0
+	@bleq	primeironumero
 	b	_loop_t_carry 	
 	@volta o buffer certo para a saida
 _loop_int_final:
@@ -107,15 +109,27 @@ _loop_int_final:
 	moveq	r8, #49
 	addeq	r1, r1, #1
 	streqb	r8, [r4], #1
-	cmp	r8, #0
-	subeq	r4, r4, #1
-	moveq	r8, #49
+	moveq	r8, #3
+	movne	r8, #2
+	@cmp	r8, #0
+	@subeq	r4, r4, #1
+	@moveq	r8, #49
 	ldrb	r9, [r1], #1
 	cmp	r9, #0
 	moveq 	r1, r4
 	ldmeqfd sp!, {r4-r11, pc}
-	strb	r9, [r4], #1
+	cmp	r9, #'0'
+	@remove os zeros da frente dos llu
+	bleq	primeironumero
+	strneb	r9, [r4], #1
 	b	_loop_int_final
+primeironumero:
+	cmp	r8, #3
+	streqb	r9, [r4], #1
+	@retorna a flag ao eq que entrou
+	cmp	r8, r8
+	mov	pc, lr
+	
 _trata_luint:
 	stmfd sp!, {R4-R11, lr}
 	mov r7, #0

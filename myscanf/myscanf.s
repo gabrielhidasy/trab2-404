@@ -102,11 +102,25 @@ _trata_mascaras_scanf:
 	cmp	r4, #'d'
 	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
+
+	cmp 	r4, #'i'
+	bleq	_le_int
+	ldmfd 	sp, {r4}
+	cmp	r4, #'i'
+	ldmeqfd sp!, {r4}
+	ldmeqfd	sp!, {R4 - R10, pc}
 	
 	cmp 	r4, #'x'
 	bleq	_le_hexa
 	ldmfd 	sp, {r4}
 	cmp	r4, #'x'
+	ldmeqfd sp!, {r4}
+	ldmeqfd	sp!, {R4 - R10, pc}
+
+	cmp 	r4, #'X'
+	bleq	_le_hexa
+	ldmfd 	sp, {r4}
+	cmp	r4, #'X'
 	ldmeqfd sp!, {r4}
 	ldmeqfd	sp!, {R4 - R10, pc}
 	
@@ -169,11 +183,25 @@ _le_long_long:
 	cmp	r4, #'d'
 	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
+
+	cmp 	r4, #'i'
+	bleq	_le_lint
+	ldmfd	sp, {R4}
+	cmp	r4, #'i'
+	ldmeqfd	sp!, {R4}
+	ldmeqfd	sp!, {R4, pc}
 	
 	cmp 	r4, #'x'
 	bleq	_le_lhexa
 	ldmfd	sp, {R4}
 	cmp		r4, #'x'
+	ldmeqfd	sp!, {R4}
+	ldmeqfd	sp!, {R4, pc}
+
+	cmp 	r4, #'X'
+	bleq	_le_lhexa
+	ldmfd	sp, {R4}
+	cmp	r4, #'X'
 	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 	
@@ -207,10 +235,24 @@ _le_long:
 	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 
+	cmp 	r4, #'i'
+	bleq	_le_int
+	ldmfd	sp, {R4}
+	cmp 	r4, #'i'
+	ldmeqfd	sp!, {R4}
+	ldmeqfd	sp!, {R4, pc}
+	
 	cmp 	r4, #'x'
 	bleq	_le_hexa
 	ldmfd	sp, {R4}
 	cmp 	r4, #'x'
+	ldmeqfd	sp!, {R4}
+	ldmeqfd	sp!, {R4, pc}
+
+	cmp 	r4, #'X'
+	bleq	_le_hexa
+	ldmfd	sp, {R4}
+	cmp 	r4, #'X'
 	ldmeqfd	sp!, {R4}
 	ldmeqfd	sp!, {R4, pc}
 

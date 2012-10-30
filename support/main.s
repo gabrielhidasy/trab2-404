@@ -10,8 +10,8 @@ _start:
 main:
 	ldr	r0, =mystring
 	ldr	r1, =caracter4
-	@ldr 	r2, =caracter2
-	@ldr 	r3, =caracter4
+	ldr 	r2, =caracter2
+	ldr 	r3, =caracter3
 	@stmfd	sp!, {r3}
 	@ldr 	r3, =caracter3
 	
@@ -24,15 +24,16 @@ main:
 	bl	myscanf
 	@ldmfd 	sp!, {r3}
 	ldr	r0, =mystring2
-	@ldr	r1, =caracter1
 	@ldr	r1, [r1]
 	@ldr	r3, [r1, #4]
 	@mov	r1, #0
 	@mov 	r1, #0xF000
-	mov	r2, #0x30
-	mov	r3, #0xF
-	mov	r3, r3, lsl #28
-	ldr 	r1, =caracter4
+	ldr	r1, =caracter4
+	ldr	r1, [r1]
+	ldr	r2, =caracter4
+	ldr	r2, [r2]
+	ldr	r3, =caracter4
+	ldr	r3, [r3,#4]
 	@ldr	r1, [r1]
 	@stmfd	sp!, {R3}
 	@stmfd	sp!, {r3}
@@ -44,9 +45,9 @@ __mainend:
 .data
 	.align	4
 mystring:
-	.asciz	"%s"
+	.asciz	"%llX"
 mystring2:
-	.asciz 	"Olha minha string %s\n"
+	.asciz 	"Olha meu int %llX\n"
 
 
 caracter1:
@@ -56,5 +57,7 @@ caracter2:
 caracter3:
 	.word 0xca
 caracter4:
+	.word 0x0
+	.word 0x0
 	.skip 2000, 0
 	

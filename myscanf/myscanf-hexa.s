@@ -55,6 +55,8 @@ _le_lhexa_loop:
 	cmp	r4, #'\n'
 	beq	_le_lhexa_loop_out
 	@--------------------------------------
+	@do the 4 - bitshift to left
+	bl 	long4lsl
 	@next char
 	add 	r2, r2, #1
 	@transforms in number
@@ -69,8 +71,6 @@ _le_lhexa_loop:
 	bgt	_myscanf_real_error
 	@else add it to accumulator
 	add 	r0, r0, r4
-	@and do the 4 - bitshift to left
-	bl 	long4lsl
 	b 	_le_lhexa_loop
 _le_lhexa_loop_out:	
 	streq	r0, [r5], #4

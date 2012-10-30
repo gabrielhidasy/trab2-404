@@ -5,6 +5,7 @@
 
 _trata_hex_long:
 	stmfd sp!, {R4-R11,lr}
+	mov	r6, r4
 	@save r1 and r0  in a safe place
 	mov	r9, r0 
 	mov	r10, r1
@@ -24,6 +25,9 @@ _trata_hex_long_loop:
 	add 	r4, r4, #48
 	cmp 	r4, #'9'
 	addgt	r4, r4, #39
+	cmp	r6, #'X'
+	cmp	r6, #'X'
+	bleq	HEXA_MAI
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	bl	long4lsr
@@ -42,6 +46,10 @@ _trata_hex_long_out:
 	bne	_trata_hex_long_out
 	ldmfd	sp!,  {R4-R11, pc}
 
+HEXA_MAI:
+	cmp	r4, #'a'
+	subge	r4, r4, #32
+	mov	pc, lr
 	
 _trata_hex_short:
 	stmfd sp!, {R4-R11,lr}
@@ -56,6 +64,8 @@ _trata_hex_short_loop:
 	add 	r4, r4, #48
 	cmp 	r4, #'9'
 	addgt	r4, r4, #39
+	cmp	r6, #'X'
+	bleq	HEXA_MAI
 	stmfd	sp!, {r4}
 	add	r5, r5, #1
 	mov	r3, r3, lsr #4

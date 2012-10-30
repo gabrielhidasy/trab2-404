@@ -139,6 +139,13 @@ trata_mascaras:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
+	cmp 	r4, #'X'
+	bleq 	_trata_hex_short
+	ldmfd 	sp, {r4}
+	cmp	r4, #'X'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
 	cmp 	r4, #'o'
 	bleq 	_trata_oct_short
 	ldmfd sp, {r4}
@@ -222,18 +229,32 @@ _trata_h:
 
 	cmp	r4, #'u'
 	bleq 	_trata_int
+	ldmfd	sp, {r4}
+	cmp	r4, #'u'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'x'
 	bleq	_trata_hex_short
+	ldmfd	sp, {r4}
+	cmp	r4, #'x'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp	r4, #'X'
+	bleq	_trata_hex_short
+	ldmfd	sp, {r4}
+	cmp	r4, #'X'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp	r4, #'o'
 	bleq	_trata_oct_short
+	ldmfd	sp, {r4}
+	cmp	r4, #'o'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
+	
 _trata_hh:
 	ldrb	r4, [r0, #2]
 	cmp	r4, #'d'
@@ -247,10 +268,18 @@ _trata_longs:
 	@le que tipo de long tratar
 	ldrb 	r4, [r0], #1
 	stmfd	sp!, {r4}	
+
 	cmp 	r4, #'x'
 	bleq	 _trata_hex_short @nomes infelizes
 	ldmfd sp, {r4}
 	cmp 	r4, #'x'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp 	r4, #'X'
+	bleq	 _trata_hex_short @nomes infelizes
+	ldmfd sp, {r4}
+	cmp 	r4, #'X'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
@@ -275,6 +304,13 @@ _trata_longs:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 
+	cmp	r4, #'i'
+	bleq	_trata_int
+	ldmfd sp, {r4}
+	cmp 	r4, #'i'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+	
 	cmp	r4, #'l'
 	bleq	_trata_long_longs
 	ldmfd sp, {r4}
@@ -292,6 +328,13 @@ _trata_long_longs:
 	bleq	 _trata_hex_long
 	ldmfd sp, {r4}
 	cmp	r4, #'x'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp 	r4, #'X'
+	bleq	 _trata_hex_long
+	ldmfd sp, {r4}
+	cmp	r4, #'X'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	
@@ -315,7 +358,15 @@ _trata_long_longs:
 	cmp	r4, #'d'
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
+
+	cmp	r4, #'i'
+	bleq	_trata_lint
+	ldmfd 	sp, {r4}
+	cmp	r4, #'i'
+	ldmeqfd	sp!, {r4}
+	ldmeqfd sp!, {R4-R12, pc}
 	b	myprintf_error
+	
 	
 myprintf_error:
 	@limpa pilha
