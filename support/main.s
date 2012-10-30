@@ -45,9 +45,9 @@ __mainend:
 .data
 	.align	4
 mystring:
-	.asciz	"%llX"
+	.asciz	"%lld"
 mystring2:
-	.asciz 	"Olha meu int %llX\n"
+	.asciz 	"Olha meu int %llu\n"
 
 
 caracter1:

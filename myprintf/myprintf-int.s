@@ -6,6 +6,13 @@
 .type _trata_uint, %function
 .global _pre_trata_luint
 .type _pre_trata_luint, %function
+trata_d0:
+	ldr	r4, [r2, #4]
+	cmp	r4, #0
+	moveq	r4, #'0'
+	streqb	r4, [r1], #1
+	ldmeqfd sp!, {r4-r11, pc}
+	mov	pc, lr
 _trata_lint:
 	@para resolver o long signed int, primeiro
 	@ler o bit mais significativo do argumento mais
@@ -15,6 +22,9 @@ _trata_lint:
 	and 	r4, r2, #7
 	cmp	r4, #0
 	addne	r2, r2, #4
+	ldr	r4, [r2]
+	cmp	r4, #0
+	bleq	trata_d0
 	ldr 	r4, [r2, #4]
 	mov 	r4, r4, lsr #31
 	@se o resultado é 0, basta imprimir
@@ -129,7 +139,7 @@ primeironumero:
 	@retorna a flag ao eq que entrou
 	cmp	r8, r8
 	mov	pc, lr
-	
+
 _trata_luint:
 	stmfd sp!, {R4-R11, lr}
 	mov r7, #0
@@ -141,10 +151,10 @@ _trata_luint:
 	@carrega argumento em r5:r4
 	ldr 	r5, [r2, #4]
 	ldr 	r4, [r2]
-	@caso argumento mais significativo = 0, basta imprimir como uint
-	cmp 	r5, #0
-	bleq	_trata_uint
-	ldmeqfd	sp!, {R4-R11, pc}
+	@caso argumento mais significativo = 0, 
+	@basta imprimir como uint
+	@cmp 	r5, #0
+	@bleq	_trata_uint
 	@teste do digito mais significativo
 	mov r11, r5, lsr #31
 	and r11, r11, #1
@@ -251,7 +261,9 @@ _long_int_end:
 	@----------------------------------------
 	ldmfd	sp!, {R4-R11, pc}
 	@-----------------------------------------
-	@32 bits ahead
+	
+
+@32 bits ahead
 _trata_int:
 	@se o primeiro bit é 0
 	@simplesmente chamar a _trata_uint
@@ -286,11 +298,16 @@ _trata_uint_loop:
 	cmp 	r0, #0
 	moveq 	r1, r10
 	moveq 	r0, r11
-	beq 	_trata_uint_end
+	beq 	_trata_uint_end_p
 	bl	 magic
 	stmfd 	sp!, {r1}
 	add 	r5, r5, #1
 	b	_trata_uint_loop
+_trata_uint_end_p:
+	cmp	r5, #0
+	bne	_trata_uint_end
+	stmfd	sp!, {r5}
+	mov	r5, #1
 _trata_uint_end:
 	@pega da pilha, poe no buffer de saida
 	cmp r5, #0

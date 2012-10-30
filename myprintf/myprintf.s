@@ -346,11 +346,7 @@ _trata_long_longs:
 	ldmeqfd sp!, {R4-R12, pc}
 
 	cmp 	r4, #'u'
-	bleq	_pre_trata_luint
-	ldmfd sp, {r4}
-	cmp	r4, #'u'
-	ldmeqfd	sp!, {r4}
-	ldmeqfd sp!, {R4-R12, pc}
+	beq	especial_uint
 
 	cmp	r4, #'d'
 	bleq	_trata_lint
@@ -366,7 +362,15 @@ _trata_long_longs:
 	ldmeqfd	sp!, {r4}
 	ldmeqfd sp!, {R4-R12, pc}
 	b	myprintf_error
-	
+
+especial_uint:	
+	mov	r11, r1
+	bl	_pre_trata_luint
+	ldmfd	sp!, {r4}
+	cmp	r11, r1
+	moveq	r11, #'0'
+	streqb	r11, [r1], #1
+	ldmfd sp!, {R4-R12, pc}
 	
 myprintf_error:
 	@limpa pilha
