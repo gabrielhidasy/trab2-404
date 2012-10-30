@@ -17,7 +17,7 @@ _le_int:
 	mov 	r8, #0
 	@get the first char
 	ldrb	r0, [r2]
-	cmp	r0, #'-'
+	cmp	r0, #'-'	
 	@if it is an minus, the result will be the negative
 	@set the flag r8 for this
 	moveq	r8, #1

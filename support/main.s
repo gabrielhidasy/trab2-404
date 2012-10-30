@@ -30,10 +30,11 @@ main:
 	@mov 	r1, #0xF000
 	ldr	r1, =caracter4
 	ldr	r1, [r1]
-	ldr	r2, =caracter4
-	ldr	r2, [r2]
-	ldr	r3, =caracter4
-	ldr	r3, [r3,#4]
+	@ldr	r1, [r1]
+	@ldr	r2, =caracter4
+	@ldr	r2, [r2]
+	@ldr	r3, =caracter4
+	@ldr	r3, [r3,#4]
 	@ldr	r1, [r1]
 	@stmfd	sp!, {R3}
 	@stmfd	sp!, {r3}
@@ -45,9 +46,9 @@ __mainend:
 .data
 	.align	4
 mystring:
-	.asciz	"%lld"
+	.asciz	"%c"
 mystring2:
-	.asciz 	"Olha meu int %llu\n"
+	.asciz 	"Olha minha string  !%6d!\n"
 
 
 caracter1:
@@ -57,7 +58,5 @@ caracter2:
 caracter3:
 	.word 0xca
 caracter4:
-	.word 0x0
-	.word 0x0
 	.skip 2000, 0
 	

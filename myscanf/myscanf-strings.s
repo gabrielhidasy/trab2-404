@@ -18,6 +18,8 @@ _le_string_loop:
 	ldrb	r4, [r2], #1
 	@load the adress to store it
 	@save the caracter to the string buffer
+	cmp	r4, #'\n'
+	moveq	r4, #0
 	strb	r4, [r5], #1
 	@compare the caracter with 0
 	@even an null string would store
